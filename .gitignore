@@ -1,0 +1,63 @@
+# Directorio node_modules de React
+frontend/node_modules/
+
+# Directorio build de React
+frontend/build/
+
+# Archivos de logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Archivos de configuración del editor
+.vscode/
+.idea/
+
+# Archivos de entorno de React
+frontend/.env
+
+# Archivos de entorno de FastAPI
+backend/.env
+
+# Migraciones de Alembic (si las tienes)
+backend/migrations/
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
+
+# Archivos de bases de datos locales (si tienes alguna base de datos local, como SQLite, y no PostgreSQL)
+*.db
+
+# Archivos temporales
+*.swp
+
+# Archivos de Docker
+*.dockerfile
+docker-compose.override.yml
+
+# Archivos de dependencias de Python
+backend/venv/
+backend/.venv/
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+
+# Archivos de configuración de pytest
+*.coveragerc
+*.tox
+*.nox
+*.coverage
+*.hypothesis/
+.coverage.*
+
+# Archivos generados por el IDE (en caso de estar usando alguno)
+*.iml
+.idea/
+
+# Otros archivos de entorno
+frontend/.env.local
+frontend/.env.development
+frontend/.env.production
