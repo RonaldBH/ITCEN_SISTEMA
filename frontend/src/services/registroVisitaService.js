@@ -11,7 +11,7 @@ export const registrarVisita = async (fechaVisita, motivoVisita, resultadoVisita
   };
 
   try {
-    const response = await axios.post('http://localhost:8000/api/v1/registros_visitas/', data, {
+    const response = await axios.post('https://itcen-sistema.onrender.com/api/v1/registros_visitas/', data, {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${accessToken}`,
@@ -28,7 +28,7 @@ export const registrarVisita = async (fechaVisita, motivoVisita, resultadoVisita
 // Nuevo servicio para listar visitas
 export const listarVisitas = async (accessToken) => {
   try {
-    const response = await axios.get('http://localhost:8000/api/v1/registros_visitas/', {
+    const response = await axios.get('https://itcen-sistema.onrender.com/api/v1/registros_visitas/', {
       headers: {
         'Authorization': `Bearer ${accessToken}`,
       },
