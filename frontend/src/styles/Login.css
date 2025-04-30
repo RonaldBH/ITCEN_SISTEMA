@@ -158,7 +158,10 @@
   border-radius: 25px;
   border: 0.5px solid #e0b3d8;
   background: linear-gradient(90deg, #ffffff, #fbd3ff);
-  padding: 0 27px;
+  padding: 0 20px;
+  width: 100%;
+  box-sizing: border-box;
+  gap: 10px; /* Espaciado entre ícono y campo */
 }
 
 .input-with-icon input {
@@ -166,10 +169,13 @@
   background: transparent;
   padding: 10px;
   flex: 1;
-  font-size: 1.3rem;
+  min-width: 0;
+  font-size: 1.1rem;
   outline: none;
   color: #4b014a;
   border-radius: 25px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .input-with-icon .icon {
