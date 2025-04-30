@@ -15,6 +15,7 @@ yarn-error.log*
 .idea/
 
 backend/.env
+backend/.alembic.ini
 # Migraciones de Alembic (si las tienes)
 backend/migrations/
 
