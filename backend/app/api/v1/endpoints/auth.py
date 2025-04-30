@@ -6,7 +6,7 @@ from app.core.security import verify_password, create_access_token
 from app.core.database import get_db
 from app.models.usuario import User
 
-router = APIRouter(prefix="/auth", tags=["Auth"])
+router = APIRouter(tags=["Auth"])
 
 @router.post("/login")
 def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
