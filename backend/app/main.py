@@ -12,9 +12,8 @@ app = FastAPI(
 
 # ✅ Configurar CORS para permitir solicitudes desde localhost:3000
 origins = [
-    "http://localhost:3000",  # Frontend en localhost:3000
-    # Agrega más dominios si es necesario, por ejemplo:
-    # "https://tu-frontend.com",
+    "http://localhost:3000",
+    "https://itcen-sistema-frontend.onrender.com"  
 ]
 
 # Agregar el middleware de CORS
