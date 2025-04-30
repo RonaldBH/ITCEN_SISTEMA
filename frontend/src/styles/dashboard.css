@@ -1,0 +1,17 @@
+/* src/styles/dashboard.css */
+
+.sidebar {
+    width: 250px;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+  }
+  
+  .topbar {
+    background-color: #ffffff;
+    border-bottom: 1px solid #dee2e6;
+  }
+  
+  .main-content {
+    padding: 20px;
+  }
+  
