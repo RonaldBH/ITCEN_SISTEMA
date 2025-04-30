@@ -11,7 +11,10 @@ export const registrarVisita = async (fechaVisita, motivoVisita, resultadoVisita
   };
 
   try {
-    const response = await axios.post('https://itcen-sistema.onrender.com/api/v1/registros_visitas/', data, {
+
+    /* para el caso del hostlocal 'http://localhost:8000/api/v1/registros_visitas/' */
+
+    const response = await axios.post('http://localhost:8000/api/v1/registros_visitas/', data, {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${accessToken}`,
@@ -28,6 +31,9 @@ export const registrarVisita = async (fechaVisita, motivoVisita, resultadoVisita
 // Nuevo servicio para listar visitas
 export const listarVisitas = async (accessToken) => {
   try {
+
+    /* para el caso del hostlocal 'http://localhost:8000/api/v1/registros_visitas/' */
+
     const response = await axios.get('https://itcen-sistema.onrender.com/api/v1/registros_visitas/', {
       headers: {
         'Authorization': `Bearer ${accessToken}`,
