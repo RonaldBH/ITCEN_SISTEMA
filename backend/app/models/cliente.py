@@ -1,11 +1,11 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, Identity
 from sqlalchemy.orm import relationship
 from app.core.database import Base
 
 class Cliente(Base):
     __tablename__ = "clientes"
 
-    id_cliente = Column(String, primary_key=True, index=True)
+    id_cliente =  Column(Integer, Identity(always=True),primary_key=True,index=True)
     nombre_cliente = Column(String,nullable=False)
     direccion_cliente = Column(String, nullable=False)
     ruc_cliente = Column(String, unique=True, nullable=False)

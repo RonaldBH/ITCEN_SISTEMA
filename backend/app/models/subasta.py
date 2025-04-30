@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy import Column, Integer, String, DateTime, Identity
 from sqlalchemy.orm import relationship
 from app.core.database import Base
 from datetime import datetime
@@ -6,7 +6,7 @@ from datetime import datetime
 class Subasta(Base):
     __tablename__ = "subastas"
 
-    id_subasta = Column(String, primary_key=True, index=True)
+    id_subasta =  Column(Integer, Identity(always=True),primary_key=True,index=True)
     cantidad_requerida = Column(Integer, nullable=False)
     codigo_subasta = Column(String, unique=True, nullable=False)
     estado = Column(String, default="pendiente")
