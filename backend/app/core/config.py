@@ -6,7 +6,4 @@ class Settings(BaseSettings):
     ALGORITHM: str
     ACCESS_TOKEN_EXPIRE_MINUTES: int
 
-    class Config:
-        env_file = ".env"
-
-settings = Settings()
+settings = Settings()  # Esto debería funcionar ahora con las variables de entorno de Render
