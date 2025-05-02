@@ -3,24 +3,13 @@ import { useNavigate } from 'react-router-dom';
 
 const Sidebar = ({ user, showRegistrarNuevaVisita, showListarVisitasPendientes, onLogout, showContenidoPrincipal }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [showSidebar, setShowSidebar] = useState(false);
   const navigate = useNavigate();
 
   const toggleDropdown = () => setIsOpen(!isOpen);
-  const toggleSidebar = () => setShowSidebar(!showSidebar);
 
   return (
     <>
-      {/* Botón hamburguesa solo visible en móviles */}
-      <button
-        className="btn btn-light d-md-none m-2"
-        onClick={toggleSidebar}
-      >
-        <i className="bi bi-list fs-3"></i>
-      </button>
-
-      {/* Sidebar visible solo en md y superior, o si está abierto */}
-      <div className={`sidebar-container ${showSidebar ? 'd-block' : 'd-none'} d-md-block flex-column p-4`}>
+      <div className="sidebar-container d-md-flex flex-column p-4">
         {/* Usuario */}
         <div className="mb-4">
           <h5 className="fw-semibold text-dark">{user?.nombre || 'Usuario'}</h5>
@@ -135,3 +124,4 @@ const Sidebar = ({ user, showRegistrarNuevaVisita, showListarVisitasPendientes, 
 };
 
 export default Sidebar;
+
