@@ -8,61 +8,76 @@ const Sidebar = ({ user, showRegistrarNuevaVisita, showListarVisitasPendientes, 
   const toggleDropdown = () => setIsOpen(!isOpen);
 
   return (
-    <>
-      <div className="sidebar-container d-md-flex flex-column p-4">
-        {/* Usuario */}
-        <div className="mb-4">
-          <h5 className="fw-semibold text-dark">{user?.nombre || 'Usuario'}</h5>
-        </div>
-
-        {/* Navegación */}
-        <nav className="flex-grow-1">
-          <ul className="list-unstyled">
-
-            <li className="mb-3">
-              <button onClick={showContenidoPrincipal} className="sidebar-link w-100 text-start">
-                Principal
-              </button>
-            </li>
-
-            <li className="mb-3">
-              <button className="sidebar-link w-100 text-start" onClick={toggleDropdown}>
-                Registro de Visitas
-              </button>
-              <div className={`submenu-wrapper ${isOpen ? 'open' : ''}`}>
-                <ul className="list-unstyled ps-3 mt-2">
-                  <li className="mb-2">
-                    <span role="button" onClick={showRegistrarNuevaVisita} className="submenu-link">▸ Registrar nueva visita</span>
-                  </li>
-                  <li>
-                    <span role="button" onClick={showListarVisitasPendientes} className="submenu-link">▸ Listar visitas pendientes</span>
-                  </li>
-                </ul>
-              </div>
-            </li>
-
-            <li className="mb-3">
-              <button onClick={() => navigate('/dashboard')} className="sidebar-link w-100 text-start">
-                Registro OC
-              </button>
-            </li>
-
-            <li className="mb-3">
-              <button onClick={() => navigate('/dashboard')} className="sidebar-link w-100 text-start">
-                Registro Subasta
-              </button>
-            </li>
-          </ul>
-        </nav>
-
-        <div className="mt-auto">
-          <button className="btn btn-outline-danger w-100 fw-medium" onClick={onLogout}>
-            Cerrar sesión
-          </button>
-        </div>
+    <div className="d-flex flex-column p-4 sidebar-container">
+      {/* Usuario */}
+      <div className="mb-4">
+        <h5 className="fw-semibold text-dark">{user?.nombre || 'Usuario'}</h5>
       </div>
 
-      {/* Estilos personalizados */}
+      {/* Navegación */}
+      <nav className="flex-grow-1">
+        <ul className="list-unstyled">
+
+          {/* Principal */}
+          <li className="mb-3">
+            <button onClick={showContenidoPrincipal} className="sidebar-link w-100 text-start">
+              Principal
+            </button>
+          </li>
+
+          {/* Registro de Visitas */}
+          <li className="mb-3">
+            <button className="sidebar-link w-100 text-start" onClick={toggleDropdown}>
+              Registro de Visitas
+            </button>
+            <div className={`submenu-wrapper ${isOpen ? 'open' : ''}`}>
+              <ul className="list-unstyled ps-3 mt-2">
+                <li className="mb-2">
+                  <span
+                    role="button"
+                    onClick={showRegistrarNuevaVisita}
+                    className="submenu-link"
+                  >
+                    ▸ Registrar nueva visita
+                  </span>
+                </li>
+                <li>
+                  <span
+                    role="button"
+                    onClick={showListarVisitasPendientes}
+                    className="submenu-link"
+                  >
+                    ▸ Listar visitas pendientes
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </li>
+
+          {/* Registro OC */}
+          <li className="mb-3">
+            <button onClick={() => navigate('/dashboard')} className="sidebar-link w-100 text-start">
+              Registro OC
+            </button>
+          </li>
+
+          {/* Registro Subasta */}
+          <li className="mb-3">
+            <button onClick={() => navigate('/dashboard')} className="sidebar-link w-100 text-start">
+              Registro Subasta
+            </button>
+          </li>
+        </ul>
+      </nav>
+
+      {/* Logout */}
+      <div className="mt-auto">
+        <button className="btn btn-outline-danger w-100 fw-medium" onClick={onLogout}>
+          Cerrar sesión
+        </button>
+      </div>
+
+      {/* Estilos */}
       <style>{`
         .sidebar-container {
           width: 260px;
@@ -71,10 +86,6 @@ const Sidebar = ({ user, showRegistrarNuevaVisita, showListarVisitasPendientes, 
           border-right: 1px solid #e5e5e5;
           font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
           overflow-y: auto;
-          position: fixed;
-          top: 0;
-          left: 0;
-          z-index: 1040;
         }
 
         .sidebar-link {
@@ -119,9 +130,8 @@ const Sidebar = ({ user, showRegistrarNuevaVisita, showListarVisitasPendientes, 
           transform: translateX(6px);
         }
       `}</style>
-    </>
+    </div>
   );
 };
 
 export default Sidebar;
-
