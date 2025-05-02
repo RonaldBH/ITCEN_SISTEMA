@@ -20,7 +20,7 @@ const Sidebar = ({ user, showRegistrarNuevaVisita, showListarVisitasPendientes, 
       </button>
 
       {/* Sidebar visible solo en md y superior, o si está abierto */}
-      <div className={`sidebar-container ${showSidebar ? 'd-block' : 'd-none'} d-md-flex flex-column p-4`}>
+      <div className={`sidebar-container ${showSidebar ? 'd-block' : 'd-none'} d-md-block flex-column p-4`}>
         {/* Usuario */}
         <div className="mb-4">
           <h5 className="fw-semibold text-dark">{user?.nombre || 'Usuario'}</h5>
