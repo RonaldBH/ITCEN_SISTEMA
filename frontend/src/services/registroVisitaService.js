@@ -12,9 +12,11 @@ export const registrarVisita = async (fechaVisita, motivoVisita, resultadoVisita
 
   try {
 
+    /* para el caso del hostlocal 'https://itcen-sistema.onrender.com/api/v1/registros_visitas/' */
     /* para el caso del hostlocal 'http://localhost:8000/api/v1/registros_visitas/' */
 
-    const response = await axios.post('http://localhost:8000/api/v1/registros_visitas/', data, {
+
+    const response = await axios.post('https://itcen-sistema.onrender.com/api/v1/registros_visitas/', data, {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${accessToken}`,
