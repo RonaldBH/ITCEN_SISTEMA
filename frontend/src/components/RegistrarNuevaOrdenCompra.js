@@ -2,11 +2,11 @@ import React, { useState, useContext } from 'react';
 import { ClientesContext } from '../context/ClientesContext';
 import { registrarOrdenCompra } from '../services/ordenCompraService';
 import { useAuth } from '../context/AuthContext';
+import '../styles/OrdenCompra.css';
 
 const RegistrarNuevaOrdenCompra = () => {
   const [codigoSiga, setCodigoSiga] = useState('');
   const [numeroOrden, setNumeroOrden] = useState('');
-  const [tipoCompra, setTipoCompra] = useState('');
   const [tipoContrato, setTipoContrato] = useState('');
   const [tipoCombustible, setTipoCombustible] = useState('');
   const [cantidad, setCantidad] = useState('');
@@ -33,7 +33,7 @@ const RegistrarNuevaOrdenCompra = () => {
       await registrarOrdenCompra(accessToken, {
         codigo_siga: codigoSiga,
         numero_orden: numeroOrden,
-        tipo_compra: tipoCompra,
+        tipo_compra: '',
         tipo_contrato: tipoContrato,
         tipo_combustible: tipoCombustible,
         cantidad: cantidad,
@@ -44,14 +44,13 @@ const RegistrarNuevaOrdenCompra = () => {
         fecha_emision_oc: fechaEmision,
         fecha_limite_entrega: fechaLimiteEntrega,
         id_cliente: clienteSeleccionado,
-        id_contrato: 1, // A futuro puedes hacer esto dinámico
+        id_contrato: 1,
       });
-      
+
       alert('Orden registrada correctamente');
 
       setCodigoSiga('');
       setNumeroOrden('');
-      setTipoCompra('');
       setTipoContrato('');
       setTipoCombustible('');
       setCantidad('');
@@ -73,120 +72,113 @@ const RegistrarNuevaOrdenCompra = () => {
   }
 
   return (
-    <div className="container mt-5" style={{ maxWidth: '800px' }}>
-      <div className="card shadow-sm rounded-4 p-4">
-        <h2 className="mb-4 text-center fw-bold">Registrar Nueva Orden de Compra</h2>
-        <form onSubmit={handleSubmit}>
+    <div className="ordenes-container">
+      <h2 className="ordenes-title">Registrar Nueva Orden de Compra</h2>
+      <form onSubmit={handleSubmit} className="row g-3">
 
-          <div className="row g-3">
-            <div className="col-md-6">
-              <div className="form-floating">
-                <input type="text" className="form-control" value={codigoSiga} onChange={(e) => setCodigoSiga(e.target.value)} required />
-                <label>Código SIGA</label>
-              </div>
-            </div>
-
-            <div className="col-md-6">
-              <div className="form-floating">
-                <input type="text" className="form-control" value={numeroOrden} onChange={(e) => setNumeroOrden(e.target.value)} />
-                <label>Número de Orden</label>
-              </div>
-            </div>
-
-            <div className="col-md-6">
-              <div className="form-floating">
-                <select className="form-select" value={tipoCompra} onChange={(e) => setTipoCompra(e.target.value)} required>
-                  <option value="">Selecciona</option>
-                  <option value="Consumible">Consumible</option>
-                  <option value="Otro">Otro</option>
-                </select>
-                <label>Tipo de Compra</label>
-              </div>
-            </div>
-
-            <div className="col-md-6">
-              <div className="form-floating">
-                <input type="text" className="form-control" value={tipoContrato} onChange={(e) => setTipoContrato(e.target.value)} />
-                <label>Tipo de Contrato</label>
-              </div>
-            </div>
-
-            <div className="col-md-6">
-              <div className="form-floating">
-                <input type="text" className="form-control" value={tipoCombustible} onChange={(e) => setTipoCombustible(e.target.value)} />
-                <label>Tipo de Combustible</label>
-              </div>
-            </div>
-
-            <div className="col-md-6">
-              <div className="form-floating">
-                <input type="number" className="form-control" value={cantidad} onChange={(e) => setCantidad(e.target.value)} />
-                <label>Cantidad</label>
-              </div>
-            </div>
-
-            <div className="col-md-6">
-              <div className="form-floating">
-                <input type="text" className="form-control" value={unidadEjecutora} onChange={(e) => setUnidadEjecutora(e.target.value)} />
-                <label>Unidad Ejecutora</label>
-              </div>
-            </div>
-
-            <div className="col-md-6">
-              <div className="form-floating">
-                <input type="text" className="form-control" value={lugarEntrega} onChange={(e) => setLugarEntrega(e.target.value)} required />
-                <label>Lugar de Entrega</label>
-              </div>
-            </div>
-
-            <div className="col-md-6">
-              <div className="form-floating">
-                <input type="text" className="form-control" value={estado} onChange={(e) => setEstado(e.target.value)} required />
-                <label>Estado</label>
-              </div>
-            </div>
-
-            <div className="col-md-6">
-              <div className="form-floating">
-                <input type="number" className="form-control" value={montoTotal} onChange={(e) => setMontoTotal(e.target.value)} required />
-                <label>Monto Total</label>
-              </div>
-            </div>
-
-            <div className="col-md-6">
-              <div className="form-floating">
-                <input type="date" className="form-control" value={fechaEmision} onChange={(e) => setFechaEmision(e.target.value)} required />
-                <label>Fecha de Emisión</label>
-              </div>
-            </div>
-
-            <div className="col-md-6">
-              <div className="form-floating">
-                <input type="date" className="form-control" value={fechaLimiteEntrega} onChange={(e) => setFechaLimiteEntrega(e.target.value)} />
-                <label>Fecha Límite Entrega</label>
-              </div>
-            </div>
-
-            <div className="col-12">
-              <div className="form-floating">
-                <select className="form-select" value={clienteSeleccionado} onChange={(e) => setClienteSeleccionado(e.target.value)} required>
-                  <option value="">Selecciona un cliente</option>
-                  {clientes.map(cliente => (
-                    <option key={cliente.id_cliente} value={cliente.id_cliente}>
-                      {cliente.nombre_cliente}
-                    </option>
-                  ))}
-                </select>
-                <label>Cliente</label>
-              </div>
-            </div>
+        <div className="col-md-6">
+          <div className="form-floating">
+            <input type="text" className="form-control" value={codigoSiga} onChange={(e) => setCodigoSiga(e.target.value)} required />
+            <label>Código SIGA</label>
           </div>
+        </div>
 
-          <button type="submit" className="btn btn-dark w-100 mt-4 py-2 rounded-3">
+        <div className="col-md-6">
+          <div className="form-floating">
+            <input type="text" className="form-control" value={numeroOrden} onChange={(e) => setNumeroOrden(e.target.value)} />
+            <label>Número de Orden</label>
+          </div>
+        </div>
+
+        <div className="col-md-6">
+          <div className="form-floating">
+            <input type="text" className="form-control" value={tipoContrato} onChange={(e) => setTipoContrato(e.target.value)} />
+            <label>Tipo de Contrato</label>
+          </div>
+        </div>
+
+        <div className="col-md-6">
+          <div className="form-floating">
+            <select className="form-select" value={tipoCombustible} onChange={(e) => setTipoCombustible(e.target.value)} required>
+              <option value="">Selecciona</option>
+              <option value="DIESEL B5-S50">DIESEL B5-S50</option>
+              <option value="GASOHOL REGULAR">GASOHOL REGULAR</option>
+              <option value="GASOHOL PREMIUM">GASOHOL PREMIUM</option>
+            </select>
+            <label>Tipo de Combustible</label>
+          </div>
+        </div>
+
+        <div className="col-md-6">
+          <div className="form-floating">
+            <input type="number" className="form-control" value={cantidad} onChange={(e) => setCantidad(e.target.value)} />
+            <label>Cantidad</label>
+          </div>
+        </div>
+
+        <div className="col-md-6">
+          <div className="form-floating">
+            <input type="text" className="form-control" value={unidadEjecutora} onChange={(e) => setUnidadEjecutora(e.target.value)} />
+            <label>Unidad Ejecutora</label>
+          </div>
+        </div>
+
+        <div className="col-md-6">
+          <div className="form-floating">
+            <input type="text" className="form-control" value={lugarEntrega} onChange={(e) => setLugarEntrega(e.target.value)} required />
+            <label>Lugar de Entrega</label>
+          </div>
+        </div>
+
+        <div className="col-md-6">
+          <div className="form-floating">
+            <input type="text" className="form-control" value={estado} onChange={(e) => setEstado(e.target.value)} required />
+            <label>Estado</label>
+          </div>
+        </div>
+
+        <div className="col-md-6">
+          <div className="form-floating">
+            <input type="number" className="form-control" value={montoTotal} onChange={(e) => setMontoTotal(e.target.value)} required />
+            <label>Monto Total</label>
+          </div>
+        </div>
+
+        <div className="col-md-6">
+          <div className="form-floating">
+            <input type="date" className="form-control" value={fechaEmision} onChange={(e) => setFechaEmision(e.target.value)} required />
+            <label>Fecha de Emisión</label>
+          </div>
+        </div>
+
+        <div className="col-md-6">
+          <div className="form-floating">
+            <input type="date" className="form-control" value={fechaLimiteEntrega} onChange={(e) => setFechaLimiteEntrega(e.target.value)} />
+            <label>Fecha Límite Entrega</label>
+          </div>
+        </div>
+
+        <div className="col-12">
+          <div className="form-floating">
+            <select className="form-select" value={clienteSeleccionado} onChange={(e) => setClienteSeleccionado(e.target.value)} required>
+              <option value="">Selecciona un cliente</option>
+              {clientes.map(cliente => (
+                <option key={cliente.id_cliente} value={cliente.id_cliente}>
+                  {cliente.nombre_cliente}
+                </option>
+              ))}
+            </select>
+            <label>Cliente</label>
+          </div>
+        </div>
+
+        <div className="col-12">
+          <button type="submit" className="btn btn-dark w-100 py-2" style={{ borderRadius: '12px' }}>
             Registrar Orden
           </button>
-        </form>
-      </div>
+        </div>
+
+      </form>
     </div>
   );
 };

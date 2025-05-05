@@ -1,18 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { obtenerOrdenesCompra } from '../services/ordenCompraService';
+import { ClientesContext } from '../context/ClientesContext'; // Importa el contexto
 import { Link } from 'react-router-dom';
-import '../styles/OrdenCompra.css'; // Asegúrate de tener este archivo CSS
+import '../styles/OrdenCompra.css'; 
 
 const ListarOrdenesCompra = () => {
   const [ordenesCompra, setOrdenesCompra] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [clienteSeleccionado, setClienteSeleccionado] = useState('');
+  const [fechaInicio, setFechaInicio] = useState('');
+  const [fechaFin, setFechaFin] = useState('');
+  
+  const { clientes, loading: clientesLoading } = useContext(ClientesContext);
   const { accessToken } = useAuth();
 
   useEffect(() => {
     const fetchOrdenesCompra = async () => {
       try {
-        const ordenes = await obtenerOrdenesCompra(accessToken);
+        const ordenes = await obtenerOrdenesCompra(accessToken, clienteSeleccionado, fechaInicio, fechaFin);
         setOrdenesCompra(ordenes);
       } catch (error) {
         console.error("Error al obtener las órdenes de compra:", error);
@@ -20,19 +26,62 @@ const ListarOrdenesCompra = () => {
         setLoading(false);
       }
     };
-  
-    fetchOrdenesCompra();
-  }, [accessToken]);
-  
 
-  if (loading) {
-    return <div className="text-center mt-5">Cargando órdenes de compra...</div>;
+    fetchOrdenesCompra();
+  }, [accessToken, clienteSeleccionado, fechaInicio, fechaFin]);
+
+  if (loading || clientesLoading) {
+    return <div className="text-center mt-5">Cargando...</div>;
   }
 
   return (
     <div className="ordenes-container">
       <h2 className="ordenes-title">Órdenes de Compra</h2>
-      <div className="table-wrapper">
+
+      {/* Filtros de fechas y cliente */}
+      <div className="row mb-4">
+        <div className="col-md-6 mb-3">
+          <label htmlFor="fechaInicio" className="form-label">Fecha Inicio</label>
+          <input
+            type="date"
+            id="fechaInicio"
+            className="form-control"
+            value={fechaInicio}
+            onChange={(e) => setFechaInicio(e.target.value)}
+          />
+        </div>
+        <div className="col-md-6 mb-3">
+          <label htmlFor="fechaFin" className="form-label">Fecha Fin</label>
+          <input
+            type="date"
+            id="fechaFin"
+            className="form-control"
+            value={fechaFin}
+            onChange={(e) => setFechaFin(e.target.value)}
+          />
+        </div>
+      </div>
+
+      {/* Filtro por Cliente */}
+      <div className="mb-3">
+        <label htmlFor="clienteSeleccionado" className="form-label">Filtrar por Cliente</label>
+        <select
+          id="clienteSeleccionado"
+          className="form-select"
+          value={clienteSeleccionado}
+          onChange={(e) => setClienteSeleccionado(e.target.value)}
+        >
+          <option value="">Selecciona un cliente</option>
+          {clientes.map((cliente) => (
+            <option key={cliente.id_cliente} value={cliente.id_cliente}>
+              {cliente.nombre_cliente}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Contenedor de la tabla con scroll horizontal */}
+      <div className="table-responsive">
         <table className="ordenes-table">
           <thead>
             <tr>
@@ -51,7 +100,7 @@ const ListarOrdenesCompra = () => {
               <th>Monto Total</th>
               <th>Cliente</th>
               <th>Contrato</th>
-              <th></th>
+              <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
