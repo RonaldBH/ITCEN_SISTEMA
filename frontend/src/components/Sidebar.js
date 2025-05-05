@@ -5,13 +5,17 @@ const Sidebar = ({
   user,
   showRegistrarNuevaVisita,
   showListarVisitasPendientes,
+  showRegistrarOrdenCompra, // Nueva función para Registro OC
+  showListarOrdenesCompra,  // Nueva función para Listar OC
   onLogout,
   showContenidoPrincipal
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isVisitasOpen, setIsVisitasOpen] = useState(false);
+  const [isOCOpen, setIsOCOpen] = useState(false); // Estado para el submenú de Registro OC
   const navigate = useNavigate();
 
-  const toggleDropdown = () => setIsOpen(!isOpen);
+  const toggleVisitasDropdown = () => setIsVisitasOpen(!isVisitasOpen);
+  const toggleOCDropdown = () => setIsOCOpen(!isOCOpen); // Función para alternar el submenú de OC
 
   return (
     <div className="d-flex flex-column p-4 sidebar-container">
@@ -31,10 +35,10 @@ const Sidebar = ({
 
           {/* Registro de Visitas */}
           <li className="mb-3">
-            <button className="sidebar-link w-100 text-start" onClick={toggleDropdown}>
+            <button className="sidebar-link w-100 text-start" onClick={toggleVisitasDropdown}>
               Registro de Visitas
             </button>
-            <div className={`submenu-wrapper ${isOpen ? 'open' : ''}`}>
+            <div className={`submenu-wrapper ${isVisitasOpen ? 'open' : ''}`}>
               <ul className="list-unstyled ps-3 mt-2">
                 <li className="mb-2">
                   <span
@@ -58,10 +62,33 @@ const Sidebar = ({
             </div>
           </li>
 
+          {/* Registro OC */}
           <li className="mb-3">
-            <button onClick={() => navigate('/dashboard')} className="sidebar-link w-100 text-start">
+            <button className="sidebar-link w-100 text-start" onClick={toggleOCDropdown}>
               Registro OC
             </button>
+            <div className={`submenu-wrapper ${isOCOpen ? 'open' : ''}`}>
+              <ul className="list-unstyled ps-3 mt-2">
+                <li className="mb-2">
+                  <span
+                    role="button"
+                    onClick={showRegistrarOrdenCompra} // Función para Registrar OC
+                    className="submenu-link"
+                  >
+                    ▸ Registrar nueva orden
+                  </span>
+                </li>
+                <li>
+                  <span
+                    role="button"
+                    onClick={showListarOrdenesCompra} // Función para Listar OC
+                    className="submenu-link"
+                  >
+                    ▸ Listar órdenes de compra
+                  </span>
+                </li>
+              </ul>
+            </div>
           </li>
 
           <li className="mb-3">

@@ -9,10 +9,16 @@ class OrdenCompra(Base):
     id_orden_compra =  Column(Integer, Identity(always=True),primary_key=True,index=True)
     codigo_siga = Column(String, unique=True,nullable=False)
     fecha_emision_oc = Column(Date,nullable=False)
+    fecha_limite_entrega = Column(Date, nullable=True) 
     tipo_compra = Column(String,nullable=False)
     lugar_entrega_oc = Column(String,nullable=False)
     estado_oc = Column(String,nullable=False)
     monto_total_oc = Column(Float,nullable=False)
+    cantidad = Column(Integer, nullable=True)  # Nuevo atributo
+    numero_orden = Column(String, nullable=True)  # Nuevo atributo
+    tipo_combustible = Column(String, nullable=True)  # Nuevo atributo
+    tipo_contrato = Column(String, nullable=True)  # Nuevo atributo
+    unidad_ejecutora = Column(String, nullable=True)  # Nuevo atributo
     id_contrato = Column(Integer, ForeignKey('contratos.id_contrato'))
     id_cliente = Column(Integer, ForeignKey('clientes.id_cliente'))
 
