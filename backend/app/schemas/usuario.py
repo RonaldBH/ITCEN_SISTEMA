@@ -23,7 +23,7 @@ class UserUpdate(BaseModel):
 
 # Respuesta: no expone la contraseña
 class UserOut(UserBase):
-    id_usuario: str
+    id_usuario: int
 
     class Config:
         orm_mode = True

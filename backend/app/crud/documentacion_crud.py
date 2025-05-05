@@ -5,7 +5,7 @@ from app.schemas.documentacion import DocumentacionCreate, DocumentacionUpdate
 def get_documentaciones(db: Session, skip: int = 0, limit: int = 100):
     return db.query(Documentacion).offset(skip).limit(limit).all()
 
-def get_documentacion(db: Session, documentacion_id: str):
+def get_documentacion(db: Session, documentacion_id: int):
     return db.query(Documentacion).filter(Documentacion.id_documentacion == documentacion_id).first()
 
 def create_documentacion(db: Session, documentacion: DocumentacionCreate):
@@ -15,7 +15,7 @@ def create_documentacion(db: Session, documentacion: DocumentacionCreate):
     db.refresh(db_doc)
     return db_doc
 
-def update_documentacion(db: Session, documentacion_id: str, documentacion: DocumentacionUpdate):
+def update_documentacion(db: Session, documentacion_id: int, documentacion: DocumentacionUpdate):
     db_doc = get_documentacion(db, documentacion_id)
     if db_doc is None:
         return None
@@ -25,7 +25,7 @@ def update_documentacion(db: Session, documentacion_id: str, documentacion: Docu
     db.refresh(db_doc)
     return db_doc
 
-def delete_documentacion(db: Session, documentacion_id: str):
+def delete_documentacion(db: Session, documentacion_id: int):
     db_doc = get_documentacion(db, documentacion_id)
     if db_doc is None:
         return None

@@ -4,7 +4,7 @@ from app.schemas.subastas import SubastaCreate, SubastaUpdate
 import uuid
 
 
-def get_subasta(db: Session, subasta_id: str):
+def get_subasta(db: Session, subasta_id: int):
     return db.query(Subasta).filter(Subasta.id_subasta == subasta_id).first()
 
 
@@ -29,7 +29,7 @@ def create_subasta(db: Session, subasta: SubastaCreate):
     return db_subasta
 
 
-def update_subasta(db: Session, subasta_id: str, subasta: SubastaUpdate):
+def update_subasta(db: Session, subasta_id: int, subasta: SubastaUpdate):
     db_subasta = db.query(Subasta).filter(Subasta.id_subasta == subasta_id).first()
     if not db_subasta:
         return None
@@ -41,7 +41,7 @@ def update_subasta(db: Session, subasta_id: str, subasta: SubastaUpdate):
     return db_subasta
 
 
-def delete_subasta(db: Session, subasta_id: str):
+def delete_subasta(db: Session, subasta_id: int):
     db_subasta = db.query(Subasta).filter(Subasta.id_subasta == subasta_id).first()
     if db_subasta:
         db.delete(db_subasta)

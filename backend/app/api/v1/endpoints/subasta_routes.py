@@ -14,7 +14,7 @@ def read_subastas(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)
 
 
 @router.get("/{subasta_id}", response_model=SubastaOut)
-def read_subasta(subasta_id: str, db: Session = Depends(get_db)):
+def read_subasta(subasta_id: int, db: Session = Depends(get_db)):
     db_subasta = crud_subasta.get_subasta(db, subasta_id=subasta_id)
     if db_subasta is None:
         raise HTTPException(status_code=404, detail="Subasta no encontrada")
@@ -27,7 +27,7 @@ def create_subasta(subasta: SubastaCreate, db: Session = Depends(get_db)):
 
 
 @router.put("/{subasta_id}", response_model=SubastaOut)
-def update_subasta(subasta_id: str, subasta: SubastaUpdate, db: Session = Depends(get_db)):
+def update_subasta(subasta_id: int, subasta: SubastaUpdate, db: Session = Depends(get_db)):
     db_subasta = crud_subasta.update_subasta(db, subasta_id=subasta_id, subasta=subasta)
     if db_subasta is None:
         raise HTTPException(status_code=404, detail="Subasta no encontrada")
@@ -35,7 +35,7 @@ def update_subasta(subasta_id: str, subasta: SubastaUpdate, db: Session = Depend
 
 
 @router.delete("/{subasta_id}", response_model=SubastaOut)
-def delete_subasta(subasta_id: str, db: Session = Depends(get_db)):
+def delete_subasta(subasta_id: int, db: Session = Depends(get_db)):
     db_subasta = crud_subasta.delete_subasta(db, subasta_id=subasta_id)
     if db_subasta is None:
         raise HTTPException(status_code=404, detail="Subasta no encontrada")

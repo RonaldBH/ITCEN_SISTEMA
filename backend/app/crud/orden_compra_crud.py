@@ -5,7 +5,7 @@ from app.schemas.ordencompra import OrdenCompraCreate, OrdenCompraUpdate
 def get_ordenes_compra(db: Session, skip: int = 0, limit: int = 100):
     return db.query(OrdenCompra).offset(skip).limit(limit).all()
 
-def get_orden_compra(db: Session, orden_id: str):
+def get_orden_compra(db: Session, orden_id: int):
     return db.query(OrdenCompra).filter(OrdenCompra.id_orden_compra == orden_id).first()
 
 def create_orden_compra(db: Session, orden: OrdenCompraCreate):
@@ -15,7 +15,7 @@ def create_orden_compra(db: Session, orden: OrdenCompraCreate):
     db.refresh(db_orden)
     return db_orden
 
-def update_orden_compra(db: Session, orden_id: str, orden: OrdenCompraUpdate):
+def update_orden_compra(db: Session, orden_id: int, orden: OrdenCompraUpdate):
     db_orden = get_orden_compra(db, orden_id)
     if db_orden is None:
         return None
@@ -25,7 +25,7 @@ def update_orden_compra(db: Session, orden_id: str, orden: OrdenCompraUpdate):
     db.refresh(db_orden)
     return db_orden
 
-def delete_orden_compra(db: Session, orden_id: str):
+def delete_orden_compra(db: Session, orden_id: int):
     db_orden = get_orden_compra(db, orden_id)
     if db_orden is None:
         return None

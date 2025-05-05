@@ -12,7 +12,7 @@ def get_password_hash(password: str) -> str:
 def get_users(db: Session, skip: int = 0, limit: int = 100):
     return db.query(User).offset(skip).limit(limit).all()
 
-def get_user(db: Session, user_id: str):
+def get_user(db: Session, user_id: int):
     return db.query(User).filter(User.id_usuario == user_id).first()
 
 def get_user_by_email(db: Session, email: str):
@@ -34,7 +34,7 @@ def create_user(db: Session, user: UserCreate):
     db.refresh(db_user)
     return db_user
 
-def update_user(db: Session, user_id: str, user: UserUpdate):
+def update_user(db: Session, user_id: int, user: UserUpdate):
     db_user = get_user(db, user_id)
     if not db_user:
         return None
@@ -44,7 +44,7 @@ def update_user(db: Session, user_id: str, user: UserUpdate):
     db.refresh(db_user)
     return db_user
 
-def delete_user(db: Session, user_id: str):
+def delete_user(db: Session, user_id: int):
     db_user = get_user(db, user_id)
     if not db_user:
         return None

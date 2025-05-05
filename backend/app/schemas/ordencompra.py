@@ -10,8 +10,8 @@ class OrdenCompraBase(BaseModel):
     lugar_entrega_oc: str
     estado_oc: str
     monto_total_oc: float
-    id_contrato: str
-    id_cliente: str
+    id_contrato: int
+    id_cliente: int
 
 # Crear
 class OrdenCompraCreate(OrdenCompraBase):
@@ -25,12 +25,12 @@ class OrdenCompraUpdate(BaseModel):
     lugar_entrega_oc: Optional[str] = None
     estado_oc: Optional[str] = None
     monto_total_oc: Optional[float] = None
-    id_contrato: Optional[str] = None
-    id_cliente: Optional[str] = None
+    id_contrato: Optional[int] = None
+    id_cliente: Optional[int] = None
 
 # Respuesta
 class OrdenCompraOut(OrdenCompraBase):
-    id_orden_compra: str
+    id_orden_compra: int
 
     class Config:
         orm_mode = True

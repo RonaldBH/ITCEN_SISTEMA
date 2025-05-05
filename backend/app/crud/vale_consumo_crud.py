@@ -5,7 +5,7 @@ from app.schemas.valeconsumo import ValeConsumoCreate, ValeConsumoUpdate
 def get_vales(db: Session, skip: int = 0, limit: int = 100):
     return db.query(ValeConsumo).offset(skip).limit(limit).all()
 
-def get_vale(db: Session, vale_id: str):
+def get_vale(db: Session, vale_id: int):
     return db.query(ValeConsumo).filter(ValeConsumo.id_vale_consumo == vale_id).first()
 
 def create_vale(db: Session, vale: ValeConsumoCreate):
@@ -15,7 +15,7 @@ def create_vale(db: Session, vale: ValeConsumoCreate):
     db.refresh(db_vale)
     return db_vale
 
-def update_vale(db: Session, vale_id: str, vale: ValeConsumoUpdate):
+def update_vale(db: Session, vale_id: int, vale: ValeConsumoUpdate):
     db_vale = get_vale(db, vale_id)
     if not db_vale:
         return None
@@ -25,7 +25,7 @@ def update_vale(db: Session, vale_id: str, vale: ValeConsumoUpdate):
     db.refresh(db_vale)
     return db_vale
 
-def delete_vale(db: Session, vale_id: str):
+def delete_vale(db: Session, vale_id: int):
     db_vale = get_vale(db, vale_id)
     if not db_vale:
         return None

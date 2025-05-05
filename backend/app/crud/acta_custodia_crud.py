@@ -5,7 +5,7 @@ from app.schemas.actacustodia import ActaCustodiaCreate, ActaCustodiaUpdate
 def get_actas(db: Session, skip: int = 0, limit: int = 100):
     return db.query(Actascustodias).offset(skip).limit(limit).all()
 
-def get_acta(db: Session, acta_id: str):
+def get_acta(db: Session, acta_id: int):
     return db.query(Actascustodias).filter(Actascustodias.id_actas_custodias == acta_id).first()
 
 def create_acta(db: Session, acta: ActaCustodiaCreate):
@@ -15,7 +15,7 @@ def create_acta(db: Session, acta: ActaCustodiaCreate):
     db.refresh(db_acta)
     return db_acta
 
-def update_acta(db: Session, acta_id: str, acta: ActaCustodiaUpdate):
+def update_acta(db: Session, acta_id: int, acta: ActaCustodiaUpdate):
     db_acta = get_acta(db, acta_id)
     if not db_acta:
         return None
@@ -25,7 +25,7 @@ def update_acta(db: Session, acta_id: str, acta: ActaCustodiaUpdate):
     db.refresh(db_acta)
     return db_acta
 
-def delete_acta(db: Session, acta_id: str):
+def delete_acta(db: Session, acta_id: int):
     db_acta = get_acta(db, acta_id)
     if not db_acta:
         return None

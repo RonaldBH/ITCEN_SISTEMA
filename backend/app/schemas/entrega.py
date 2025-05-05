@@ -6,7 +6,7 @@ from datetime import date
 class EntregaBase(BaseModel):
     cantidad_entregada: float
     estado_entrega: str
-    id_orden_compra: str
+    id_orden_compra: int
 
 # Crear
 class EntregaCreate(EntregaBase):
@@ -16,11 +16,11 @@ class EntregaCreate(EntregaBase):
 class EntregaUpdate(BaseModel):
     cantidad_entregada: Optional[float] = None
     estado_entrega: Optional[str] = None
-    id_orden_compra: Optional[str] = None
+    id_orden_compra: Optional[int] = None
 
 # Respuesta
 class EntregaOut(EntregaBase):
-    id_entrega: str
+    id_entrega: int
 
     class Config:
         orm_mode = True

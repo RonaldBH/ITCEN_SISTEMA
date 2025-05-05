@@ -12,7 +12,7 @@ def read_documentaciones(skip: int = 0, limit: int = 100, db: Session = Depends(
     return documentacion_crud.get_documentaciones(db, skip=skip, limit=limit)
 
 @router.get("/{documentacion_id}", response_model=DocumentacionOut)
-def read_documentacion(documentacion_id: str, db: Session = Depends(get_db)):
+def read_documentacion(documentacion_id: int, db: Session = Depends(get_db)):
     db_doc = documentacion_crud.get_documentacion(db, documentacion_id)
     if db_doc is None:
         raise HTTPException(status_code=404, detail="Documentación no encontrada")
@@ -23,14 +23,14 @@ def create_documentacion(documentacion: DocumentacionCreate, db: Session = Depen
     return documentacion_crud.create_documentacion(db, documentacion)
 
 @router.put("/{documentacion_id}", response_model=DocumentacionOut)
-def update_documentacion(documentacion_id: str, documentacion: DocumentacionUpdate, db: Session = Depends(get_db)):
+def update_documentacion(documentacion_id: int, documentacion: DocumentacionUpdate, db: Session = Depends(get_db)):
     db_doc = documentacion_crud.update_documentacion(db, documentacion_id, documentacion)
     if db_doc is None:
         raise HTTPException(status_code=404, detail="Documentación no encontrada")
     return db_doc
 
 @router.delete("/{documentacion_id}", response_model=DocumentacionOut)
-def delete_documentacion(documentacion_id: str, db: Session = Depends(get_db)):
+def delete_documentacion(documentacion_id: int, db: Session = Depends(get_db)):
     db_doc = documentacion_crud.delete_documentacion(db, documentacion_id)
     if db_doc is None:
         raise HTTPException(status_code=404, detail="Documentación no encontrada")

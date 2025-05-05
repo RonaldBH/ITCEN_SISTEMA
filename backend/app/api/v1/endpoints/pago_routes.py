@@ -13,7 +13,7 @@ def read_pagos(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return pago_crud.get_pagos(db, skip=skip, limit=limit)
 
 @router.get("/{pago_id}", response_model=PagoOut)
-def read_pago(pago_id: str, db: Session = Depends(get_db)):
+def read_pago(pago_id: int, db: Session = Depends(get_db)):
     db_pago = pago_crud.get_pago(db, pago_id=pago_id)
     if db_pago is None:
         raise HTTPException(status_code=404, detail="Pago no encontrado")
@@ -24,14 +24,14 @@ def create_pago(pago: PagoCreate, db: Session = Depends(get_db)):
     return pago_crud.create_pago(db=db, pago=pago)
 
 @router.put("/{pago_id}", response_model=PagoOut)
-def update_pago(pago_id: str, pago: PagoUpdate, db: Session = Depends(get_db)):
+def update_pago(pago_id: int, pago: PagoUpdate, db: Session = Depends(get_db)):
     db_pago = pago_crud.update_pago(db, pago_id=pago_id, pago=pago)
     if db_pago is None:
         raise HTTPException(status_code=404, detail="Pago no encontrado")
     return db_pago
 
 @router.delete("/{pago_id}", response_model=PagoOut)
-def delete_pago(pago_id: str, db: Session = Depends(get_db)):
+def delete_pago(pago_id: int, db: Session = Depends(get_db)):
     db_pago = pago_crud.delete_pago(db, pago_id=pago_id)
     if db_pago is None:
         raise HTTPException(status_code=404, detail="Pago no encontrado")

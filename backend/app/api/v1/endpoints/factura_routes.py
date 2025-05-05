@@ -15,7 +15,7 @@ def read_facturas(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)
 
 
 @router.get("/{factura_id}", response_model=FacturaOut)
-def read_factura(factura_id: str, db: Session = Depends(get_db)):
+def read_factura(factura_id: int, db: Session = Depends(get_db)):
     db_factura = factura_crud.get_factura(db, factura_id=factura_id)
     if db_factura is None:
         raise HTTPException(status_code=404, detail="Factura no encontrada")
@@ -28,7 +28,7 @@ def create_factura(factura: FacturaCreate, db: Session = Depends(get_db)):
 
 
 @router.put("/{factura_id}", response_model=FacturaOut)
-def update_factura(factura_id: str, factura: FacturaUpdate, db: Session = Depends(get_db)):
+def update_factura(factura_id: int, factura: FacturaUpdate, db: Session = Depends(get_db)):
     db_factura = factura_crud.update_factura(db, factura_id=factura_id, factura=factura)
     if db_factura is None:
         raise HTTPException(status_code=404, detail="Factura no encontrada")
@@ -36,7 +36,7 @@ def update_factura(factura_id: str, factura: FacturaUpdate, db: Session = Depend
 
 
 @router.delete("/{factura_id}", response_model=FacturaOut)
-def delete_factura(factura_id: str, db: Session = Depends(get_db)):
+def delete_factura(factura_id: int, db: Session = Depends(get_db)):
     db_factura = factura_crud.delete_factura(db, factura_id=factura_id)
     if db_factura is None:
         raise HTTPException(status_code=404, detail="Factura no encontrada")

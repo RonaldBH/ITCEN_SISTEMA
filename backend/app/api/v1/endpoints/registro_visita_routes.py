@@ -13,7 +13,7 @@ def read_visitas(skip: int = 0, limit: int = 100, db: Session = Depends(get_db))
     return registro_visita_crud.get_visitas(db, skip=skip, limit=limit)
 
 @router.get("/{visita_id}", response_model=RegistroVisitaOut)
-def read_visita(visita_id: str, db: Session = Depends(get_db)):
+def read_visita(visita_id: int, db: Session = Depends(get_db)):
     db_visita = registro_visita_crud.get_visita(db, visita_id=visita_id)
     if db_visita is None:
         raise HTTPException(status_code=404, detail="Registro de visita no encontrado")
@@ -24,14 +24,14 @@ def create_visita(visita: RegistroVisitaCreate, db: Session = Depends(get_db)):
     return registro_visita_crud.create_visita(db=db, visita=visita)
 
 @router.put("/{visita_id}", response_model=RegistroVisitaOut)
-def update_visita(visita_id: str, visita: RegistroVisitaUpdate, db: Session = Depends(get_db)):
+def update_visita(visita_id: int, visita: RegistroVisitaUpdate, db: Session = Depends(get_db)):
     db_visita = registro_visita_crud.update_visita(db, visita_id=visita_id, visita=visita)
     if db_visita is None:
         raise HTTPException(status_code=404, detail="Registro de visita no encontrado")
     return db_visita
 
 @router.delete("/{visita_id}", response_model=RegistroVisitaOut)
-def delete_visita(visita_id: str, db: Session = Depends(get_db)):
+def delete_visita(visita_id: int, db: Session = Depends(get_db)):
     db_visita = registro_visita_crud.delete_visita(db, visita_id=visita_id)
     if db_visita is None:
         raise HTTPException(status_code=404, detail="Registro de visita no encontrado")

@@ -7,8 +7,8 @@ class ContratoBase(BaseModel):
     fecha_firma: date
     estado_contrato: str
     monto_total_contrato: float
-    id_cliente: str
-    id_subasta: str
+    id_cliente: int
+    id_subasta: int
 
 # Crear
 class ContratoCreate(ContratoBase):
@@ -19,12 +19,12 @@ class ContratoUpdate(BaseModel):
     fecha_firma: Optional[date] = None
     estado_contrato: Optional[str] = None
     monto_total_contrato: Optional[float] = None
-    id_cliente: Optional[str] = None
-    id_subasta: Optional[str] = None
+    id_cliente: Optional[int] = None
+    id_subasta: Optional[int] = None
 
 # Respuesta
 class ContratoOut(ContratoBase):
-    id_contrato: str
+    id_contrato: int
 
     class Config:
         orm_mode = True

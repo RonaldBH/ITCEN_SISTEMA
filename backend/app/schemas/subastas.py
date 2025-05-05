@@ -28,7 +28,7 @@ class SubastaUpdate(BaseModel):
 
 # Respuesta
 class SubastaOut(SubastaBase):
-    id_subasta: str
+    id_subasta: int
 
     class Config:
         orm_mode = True

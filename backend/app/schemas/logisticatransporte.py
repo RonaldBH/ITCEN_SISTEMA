@@ -5,8 +5,8 @@ from typing import Optional
 class LogisticaTransportBase(BaseModel):
     placa_vehiculo_logistica: str
     estado_logistica: str
-    id_entrega: str
-    id_usuario: str
+    id_entrega: int
+    id_usuario: int
 
 # Crear
 class LogisticaTransportCreate(LogisticaTransportBase):
@@ -16,12 +16,12 @@ class LogisticaTransportCreate(LogisticaTransportBase):
 class LogisticaTransportUpdate(BaseModel):
     placa_vehiculo_logistica: Optional[str] = None
     estado_logistica: Optional[str] = None
-    id_entrega: Optional[str] = None
-    id_usuario: Optional[str] = None
+    id_entrega: Optional[int] = None
+    id_usuario: Optional[int] = None
 
 # Respuesta
 class LogisticaTransportOut(LogisticaTransportBase):
-    id_logistica_transport: str
+    id_logistica_transport: int
 
     class Config:
         orm_mode = True

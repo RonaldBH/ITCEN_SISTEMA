@@ -5,7 +5,7 @@ from app.schemas.entrega import EntregaCreate, EntregaUpdate
 def get_entregas(db: Session, skip: int = 0, limit: int = 100):
     return db.query(Entrega).offset(skip).limit(limit).all()
 
-def get_entrega(db: Session, entrega_id: str):
+def get_entrega(db: Session, entrega_id: int):
     return db.query(Entrega).filter(Entrega.id_entrega == entrega_id).first()
 
 def create_entrega(db: Session, entrega: EntregaCreate):
@@ -15,7 +15,7 @@ def create_entrega(db: Session, entrega: EntregaCreate):
     db.refresh(db_entrega)
     return db_entrega
 
-def update_entrega(db: Session, entrega_id: str, entrega: EntregaUpdate):
+def update_entrega(db: Session, entrega_id: int, entrega: EntregaUpdate):
     db_entrega = get_entrega(db, entrega_id)
     if db_entrega is None:
         return None
@@ -25,7 +25,7 @@ def update_entrega(db: Session, entrega_id: str, entrega: EntregaUpdate):
     db.refresh(db_entrega)
     return db_entrega
 
-def delete_entrega(db: Session, entrega_id: str):
+def delete_entrega(db: Session, entrega_id: int):
     db_entrega = get_entrega(db, entrega_id)
     if db_entrega is None:
         return None

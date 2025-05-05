@@ -11,7 +11,7 @@ class GuiaRemisionBase(BaseModel):
     dni_conductor: str
     placa_vehiculo_guia: str
     estado_guia: str
-    id_entrega: str
+    id_entrega: int
 
 # Crear
 class GuiaRemisionCreate(GuiaRemisionBase):
@@ -26,11 +26,11 @@ class GuiaRemisionUpdate(BaseModel):
     dni_conductor: Optional[str] = None
     placa_vehiculo_guia: Optional[str] = None
     estado_guia: Optional[str] = None
-    id_entrega: Optional[str] = None
+    id_entrega: Optional[int] = None
 
 # Respuesta
 class GuiaRemisionOut(GuiaRemisionBase):
-    id_guia_remision: str
+    id_guia_remision: int
 
     class Config:
         orm_mode = True

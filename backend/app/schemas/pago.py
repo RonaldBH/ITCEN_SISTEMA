@@ -6,7 +6,7 @@ from datetime import date
 class PagoBase(BaseModel):
     fecha_pago: date
     monto_pagado: float
-    id_factura: str
+    id_factura: int
 
 # Crear
 class PagoCreate(PagoBase):
@@ -16,11 +16,11 @@ class PagoCreate(PagoBase):
 class PagoUpdate(BaseModel):
     fecha_pago: Optional[date] = None
     monto_pagado: Optional[float] = None
-    id_factura: Optional[str] = None
+    id_factura: Optional[int] = None
 
 # Respuesta
 class PagoOut(PagoBase):
-    id_pago: str
+    id_pago: int
 
     class Config:
         orm_mode = True

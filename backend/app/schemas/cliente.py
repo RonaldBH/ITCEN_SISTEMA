@@ -21,7 +21,7 @@ class ClienteUpdate(BaseModel):
 
 # Respuesta
 class ClienteOut(ClienteBase):
-    id_cliente: str
+    id_cliente: int
 
     class Config:
         orm_mode = True

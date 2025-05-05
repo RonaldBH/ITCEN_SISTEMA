@@ -11,7 +11,7 @@ def create_cliente(db: Session, cliente: ClienteCreate):
     return db_cliente
 
 # Obtener uno por ID
-def get_cliente(db: Session, cliente_id: str):
+def get_cliente(db: Session, cliente_id: int):
     return db.query(Cliente).filter(Cliente.id_cliente == cliente_id).first()
 
 # Obtener todos
@@ -19,7 +19,7 @@ def get_all_clientes(db: Session, skip: int = 0, limit: int = 100):
     return db.query(Cliente).offset(skip).limit(limit).all()
 
 # Actualizar
-def update_cliente(db: Session, cliente_id: str, cliente_update: ClienteUpdate):
+def update_cliente(db: Session, cliente_id: int, cliente_update: ClienteUpdate):
     db_cliente = get_cliente(db, cliente_id)
     if not db_cliente:
         return None
@@ -30,7 +30,7 @@ def update_cliente(db: Session, cliente_id: str, cliente_update: ClienteUpdate):
     return db_cliente
 
 # Eliminar
-def delete_cliente(db: Session, cliente_id: str):
+def delete_cliente(db: Session, cliente_id: int):
     db_cliente = get_cliente(db, cliente_id)
     if not db_cliente:
         return None

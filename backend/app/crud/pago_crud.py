@@ -5,7 +5,7 @@ from app.schemas.pago import PagoCreate, PagoUpdate
 def get_pagos(db: Session, skip: int = 0, limit: int = 100):
     return db.query(Pago).offset(skip).limit(limit).all()
 
-def get_pago(db: Session, pago_id: str):
+def get_pago(db: Session, pago_id: int):
     return db.query(Pago).filter(Pago.id_pago == pago_id).first()
 
 def create_pago(db: Session, pago: PagoCreate):
@@ -15,7 +15,7 @@ def create_pago(db: Session, pago: PagoCreate):
     db.refresh(db_pago)
     return db_pago
 
-def update_pago(db: Session, pago_id: str, pago: PagoUpdate):
+def update_pago(db: Session, pago_id: int, pago: PagoUpdate):
     db_pago = get_pago(db, pago_id)
     if not db_pago:
         return None
@@ -25,7 +25,7 @@ def update_pago(db: Session, pago_id: str, pago: PagoUpdate):
     db.refresh(db_pago)
     return db_pago
 
-def delete_pago(db: Session, pago_id: str):
+def delete_pago(db: Session, pago_id: int):
     db_pago = get_pago(db, pago_id)
     if not db_pago:
         return None

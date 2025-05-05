@@ -8,7 +8,7 @@ class FacturaBase(BaseModel):
     fecha_emision_factura: date
     monto_total_factura: float
     estado_factura: str
-    id_entrega: str
+    id_entrega: int
 
 # Crear
 class FacturaCreate(FacturaBase):
@@ -20,11 +20,11 @@ class FacturaUpdate(BaseModel):
     fecha_emision_factura: Optional[date] = None
     monto_total_factura: Optional[float] = None
     estado_factura: Optional[str] = None
-    id_entrega: Optional[str] = None
+    id_entrega: Optional[int] = None
 
 # Respuesta
 class FacturaOut(FacturaBase):
-    id_factura: str
+    id_factura: int
 
     class Config:
         orm_mode = True

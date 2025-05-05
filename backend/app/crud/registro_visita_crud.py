@@ -5,7 +5,7 @@ from app.schemas.registrovisita import RegistroVisitaCreate, RegistroVisitaUpdat
 def get_visitas(db: Session, skip: int = 0, limit: int = 100):
     return db.query(RegistroVisita).offset(skip).limit(limit).all()
 
-def get_visita(db: Session, visita_id: str):
+def get_visita(db: Session, visita_id: int):
     return db.query(RegistroVisita).filter(RegistroVisita.id_registro_visita == visita_id).first()
 
 def create_visita(db: Session, visita: RegistroVisitaCreate):
@@ -15,7 +15,7 @@ def create_visita(db: Session, visita: RegistroVisitaCreate):
     db.refresh(db_visita)
     return db_visita
 
-def update_visita(db: Session, visita_id: str, visita: RegistroVisitaUpdate):
+def update_visita(db: Session, visita_id: int, visita: RegistroVisitaUpdate):
     db_visita = get_visita(db, visita_id)
     if not db_visita:
         return None
@@ -25,7 +25,7 @@ def update_visita(db: Session, visita_id: str, visita: RegistroVisitaUpdate):
     db.refresh(db_visita)
     return db_visita
 
-def delete_visita(db: Session, visita_id: str):
+def delete_visita(db: Session, visita_id: int):
     db_visita = get_visita(db, visita_id)
     if not db_visita:
         return None

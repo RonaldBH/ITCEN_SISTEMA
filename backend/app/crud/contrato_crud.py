@@ -5,7 +5,7 @@ from app.schemas.contrato import ContratoCreate, ContratoUpdate
 def get_contratos(db: Session, skip: int = 0, limit: int = 100):
     return db.query(Contrato).offset(skip).limit(limit).all()
 
-def get_contrato(db: Session, contrato_id: str):
+def get_contrato(db: Session, contrato_id: int):
     return db.query(Contrato).filter(Contrato.id_contrato == contrato_id).first()
 
 def create_contrato(db: Session, contrato: ContratoCreate):
@@ -15,7 +15,7 @@ def create_contrato(db: Session, contrato: ContratoCreate):
     db.refresh(db_contrato)
     return db_contrato
 
-def update_contrato(db: Session, contrato_id: str, contrato: ContratoUpdate):
+def update_contrato(db: Session, contrato_id: int, contrato: ContratoUpdate):
     db_contrato = get_contrato(db, contrato_id)
     if db_contrato is None:
         return None
@@ -25,7 +25,7 @@ def update_contrato(db: Session, contrato_id: str, contrato: ContratoUpdate):
     db.refresh(db_contrato)
     return db_contrato
 
-def delete_contrato(db: Session, contrato_id: str):
+def delete_contrato(db: Session, contrato_id: int):
     db_contrato = get_contrato(db, contrato_id)
     if db_contrato is None:
         return None

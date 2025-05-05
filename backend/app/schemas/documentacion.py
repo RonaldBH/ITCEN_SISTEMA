@@ -7,7 +7,7 @@ class DocumentacionBase(BaseModel):
     nombre_documento: str
     tipo_documento: str
     fecha_subida: date
-    id_subasta: str
+    id_subasta: int
 
 # Crear
 class DocumentacionCreate(DocumentacionBase):
@@ -18,11 +18,11 @@ class DocumentacionUpdate(BaseModel):
     nombre_documento: Optional[str] = None
     tipo_documento: Optional[str] = None
     fecha_subida: Optional[date] = None
-    id_subasta: Optional[str] = None
+    id_subasta: Optional[int] = None
 
 # Respuesta
 class DocumentacionOut(DocumentacionBase):
-    id_documentacion: str
+    id_documentacion: int
 
     class Config:
         orm_mode = True
