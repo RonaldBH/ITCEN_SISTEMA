@@ -13,6 +13,7 @@ const ListarVisitasPendientes = () => {
     const fetchVisitas = async () => {
       try {
         const data = await listarVisitas(accessToken);
+        console.log('Visitas:', data); 
         setVisitas(data);
       } catch (error) {
         console.error('Error al cargar visitas:', error);
@@ -48,8 +49,8 @@ const ListarVisitasPendientes = () => {
                     <th scope="col">Fecha de Visita</th>
                     <th scope="col">Motivo</th>
                     <th scope="col">Resultado</th>
-                    <th scope="col">ID Usuario</th>
-                    <th scope="col">ID Cliente</th>
+                    <th scope="col">Usuario</th>
+                    <th scope="col">Cliente</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -59,8 +60,8 @@ const ListarVisitasPendientes = () => {
                       <td>{new Date(visita.fecha_visita).toLocaleDateString()}</td>
                       <td>{visita.motivo_visita || <span className="text-muted">Sin motivo</span>}</td>
                       <td>{visita.resultado_visita || <span className="text-muted">Sin resultado</span>}</td>
-                      <td>{visita.id_usuario || <span className="text-muted">N/A</span>}</td>
-                      <td>{visita.id_cliente || <span className="text-muted">N/A</span>}</td>
+                      <td>{visita.usuario?.nombre_usuario || <span className="text-muted">N/A</span>}</td>
+                      <td>{visita.cliente?.nombre_cliente || <span className="text-muted">N/A</span>}</td>
                     </tr>
                   ))}
                 </tbody>

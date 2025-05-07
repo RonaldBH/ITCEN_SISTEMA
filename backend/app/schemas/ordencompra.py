@@ -1,6 +1,9 @@
 from pydantic import BaseModel
 from typing import Optional
 from datetime import date
+from app.schemas.cliente import ClienteOut
+from app.schemas.contrato import ContratoOut
+
 
 # Base
 class OrdenCompraBase(BaseModel):
@@ -43,6 +46,8 @@ class OrdenCompraUpdate(BaseModel):
 # Respuesta
 class OrdenCompraOut(OrdenCompraBase):
     id_orden_compra: int
+    cliente: Optional[ClienteOut]
+    contrato: Optional[ContratoOut]
 
     class Config:
         orm_mode = True

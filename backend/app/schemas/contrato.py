@@ -23,8 +23,13 @@ class ContratoUpdate(BaseModel):
     id_subasta: Optional[int] = None
 
 # Respuesta
-class ContratoOut(ContratoBase):
-    id_contrato: int
+class ContratoOut(BaseModel):
+    id_contrato: Optional[int] = None
+    fecha_firma: Optional[date] = None
+    estado_contrato: Optional[str] = None
+    monto_total_contrato: Optional[float] = None
+    id_cliente: Optional[int] = None
+    id_subasta: Optional[int] = None
 
     class Config:
         orm_mode = True

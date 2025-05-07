@@ -1,0 +1,66 @@
+/* Contenedor principal */
+.registro-container {
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 1.25rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+    margin-top: 2rem;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  }
+  
+  /* Título */
+  .registro-title {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #1a1a1a;
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  
+  /* Estilos para inputs y selects */
+  .registro-form .form-control,
+  .registro-form .form-select {
+    padding: 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 0.75rem;
+    font-size: 1rem;
+    background-color: #fafafa;
+    transition: all 0.2s ease-in-out;
+  }
+  
+  .registro-form .form-control:focus,
+  .registro-form .form-select:focus {
+    outline: none;
+    border-color: #999;
+    background-color: #fff;
+  }
+  
+  /* Botón de envío */
+  .btn-registrar {
+    background-color: #ffdaff;
+    color: #333;
+    padding: 10px 24px;
+    border-radius: 1rem;
+    font-weight: 600;
+    font-size: 1rem;
+    border: none;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease-in-out;
+  }
+  
+  .btn-registrar:hover {
+    background-color: #ffc8f5;
+    color: #000;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .registro-container {
+      padding: 1rem;
+    }
+  
+    .registro-title {
+      font-size: 1.5rem;
+    }
+  }
+  

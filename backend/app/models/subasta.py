@@ -14,6 +14,7 @@ class Subasta(Base):
     fecha_inicio = Column(DateTime, default=datetime.utcnow)
     lugar_entrega = Column(String, nullable=False)
     numero_entregas = Column(Integer, nullable=False)
+    tipo_combustible = Column(String, nullable=False)
 
     contrato = relationship("Contrato", back_populates="subasta")
     documento = relationship("Documentacion", back_populates="subasta")

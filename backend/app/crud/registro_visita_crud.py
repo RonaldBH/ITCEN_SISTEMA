@@ -1,12 +1,20 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from app.models.registro_visita import RegistroVisita
 from app.schemas.registrovisita import RegistroVisitaCreate, RegistroVisitaUpdate
 
 def get_visitas(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(RegistroVisita).offset(skip).limit(limit).all()
+    return db.query(RegistroVisita)\
+             .options(joinedload(RegistroVisita.usuario), joinedload(RegistroVisita.cliente))\
+             .offset(skip)\
+             .limit(limit)\
+             .all()
 
 def get_visita(db: Session, visita_id: int):
-    return db.query(RegistroVisita).filter(RegistroVisita.id_registro_visita == visita_id).first()
+    return db.query(RegistroVisita)\
+             .options(joinedload(RegistroVisita.usuario), joinedload(RegistroVisita.cliente))\
+             .filter(RegistroVisita.id_registro_visita == visita_id)\
+             .first()
+
 
 def create_visita(db: Session, visita: RegistroVisitaCreate):
     db_visita = RegistroVisita(**visita.dict())

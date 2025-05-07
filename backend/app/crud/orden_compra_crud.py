@@ -2,11 +2,20 @@ from sqlalchemy.orm import Session
 from app.models.orden_compra import OrdenCompra
 from app.schemas.ordencompra import OrdenCompraCreate, OrdenCompraUpdate
 
+from sqlalchemy.orm import joinedload
+
 def get_ordenes_compra(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(OrdenCompra).offset(skip).limit(limit).all()
+    return db.query(OrdenCompra).options(
+        joinedload(OrdenCompra.cliente),
+        joinedload(OrdenCompra.contrato)
+    ).offset(skip).limit(limit).all()
 
 def get_orden_compra(db: Session, orden_id: int):
-    return db.query(OrdenCompra).filter(OrdenCompra.id_orden_compra == orden_id).first()
+    return db.query(OrdenCompra).options(
+        joinedload(OrdenCompra.cliente),
+        joinedload(OrdenCompra.contrato)
+    ).filter(OrdenCompra.id_orden_compra == orden_id).first()
+
 
 def create_orden_compra(db: Session, orden: OrdenCompraCreate):
     db_orden = OrdenCompra(**orden.dict())

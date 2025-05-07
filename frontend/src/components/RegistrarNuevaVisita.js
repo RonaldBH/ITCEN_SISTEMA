@@ -4,7 +4,11 @@ import { useAuth } from '../context/AuthContext';
 import { registrarVisita } from '../services/registroVisitaService';
 
 const RegistrarNuevaVisita = () => {
-  const [fechaVisita, setFechaVisita] = useState('');
+  const [fechaVisita, setFechaVisita] = useState(() => {
+    const today = new Date();
+    return today.toISOString().split('T')[0]; // "YYYY-MM-DD"
+  });
+
   const [motivoVisita, setMotivoVisita] = useState('');
   const [resultadoVisita, setResultadoVisita] = useState('');
   const [clienteSeleccionado, setClienteSeleccionado] = useState('');

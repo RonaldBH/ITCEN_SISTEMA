@@ -9,7 +9,7 @@ export const loginUser = async (username, password) => {
   /* para el caso del hostlocal 'http://localhost:8000/api/v1/auth/login'*/
 
 
-  const response = await axios.post('http://localhost:8000/api/v1/auth/login', data, {
+  const response = await axios.post('https://itcen-sistema.onrender.com/api/v1/auth/login', data, {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
     },

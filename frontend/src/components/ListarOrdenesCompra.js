@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { obtenerOrdenesCompra } from '../services/ordenCompraService';
-import { ClientesContext } from '../context/ClientesContext'; // Importa el contexto
+import { obtenerOrdenesCompra, actualizarOrdenCompra } from '../services/ordenCompraService';
+import { ClientesContext } from '../context/ClientesContext';
 import { Link } from 'react-router-dom';
-import '../styles/OrdenCompra.css'; 
+import '../styles/ListarOrdenesCompra.css';
 
 const ListarOrdenesCompra = () => {
   const [ordenesCompra, setOrdenesCompra] = useState([]);
@@ -11,9 +11,28 @@ const ListarOrdenesCompra = () => {
   const [clienteSeleccionado, setClienteSeleccionado] = useState('');
   const [fechaInicio, setFechaInicio] = useState('');
   const [fechaFin, setFechaFin] = useState('');
-  
+
   const { clientes, loading: clientesLoading } = useContext(ClientesContext);
   const { accessToken } = useAuth();
+
+  const estadosDisponibles = [
+    'Emitida', 'Pendiente', 'Procesada', 'En Camino', 'Entregada', 'Cancelada'
+  ];
+
+  const cambiarEstado = async (id, nuevoEstado) => {
+    try {
+      const datos = { estado_oc: nuevoEstado };
+      const updatedOrden = await actualizarOrdenCompra(id, datos, accessToken);
+      setOrdenesCompra(prev =>
+        prev.map(orden =>
+          orden.id_orden_compra === id ? { ...orden, estado_oc: updatedOrden.estado_oc } : orden
+        )
+      );
+    } catch (error) {
+      console.error('Error al cambiar el estado de la orden:', error);
+      alert('Error al actualizar el estado');
+    }
+  };
 
   useEffect(() => {
     const fetchOrdenesCompra = async () => {
@@ -38,7 +57,7 @@ const ListarOrdenesCompra = () => {
     <div className="ordenes-container">
       <h2 className="ordenes-title">Órdenes de Compra</h2>
 
-      {/* Filtros de fechas y cliente */}
+      {/* Filtros */}
       <div className="row mb-4">
         <div className="col-md-6 mb-3">
           <label htmlFor="fechaInicio" className="form-label">Fecha Inicio</label>
@@ -62,7 +81,6 @@ const ListarOrdenesCompra = () => {
         </div>
       </div>
 
-      {/* Filtro por Cliente */}
       <div className="mb-3">
         <label htmlFor="clienteSeleccionado" className="form-label">Filtrar por Cliente</label>
         <select
@@ -80,7 +98,7 @@ const ListarOrdenesCompra = () => {
         </select>
       </div>
 
-      {/* Contenedor de la tabla con scroll horizontal */}
+      {/* Tabla */}
       <div className="table-responsive">
         <table className="ordenes-table">
           <thead>
@@ -117,9 +135,19 @@ const ListarOrdenesCompra = () => {
                 <td>{orden.cantidad ?? '-'}</td>
                 <td>{orden.unidad_ejecutora || '-'}</td>
                 <td>{orden.lugar_entrega_oc}</td>
-                <td><span className={`estado ${orden.estado_oc.toLowerCase()}`}>{orden.estado_oc}</span></td>
+                <td>
+                  <select
+                    className={`form-select estado-select ${orden.estado_oc.toLowerCase()}`}
+                    value={orden.estado_oc}
+                    onChange={(e) => cambiarEstado(orden.id_orden_compra, e.target.value)}
+                  >
+                    {estadosDisponibles.map((estado) => (
+                      <option key={estado} value={estado}>{estado}</option>
+                    ))}
+                  </select>
+                </td>
                 <td>{orden.monto_total_oc.toFixed(2)} USD</td>
-                <td>{orden.cliente?.id_cliente || 'Desconocido'}</td>
+                <td>{orden.cliente?.nombre_cliente || 'Desconocido'}</td>
                 <td>{orden.id_contrato}</td>
                 <td>
                   <Link to={`/orden-compra/${orden.id_orden_compra}`} className="btn-ver">Ver</Link>

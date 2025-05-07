@@ -2,7 +2,8 @@ import React, { useState, useContext } from 'react';
 import { ClientesContext } from '../context/ClientesContext';
 import { registrarOrdenCompra } from '../services/ordenCompraService';
 import { useAuth } from '../context/AuthContext';
-import '../styles/OrdenCompra.css';
+import '../styles/RegistrarOrdenCompra.css';
+
 
 
 const RegistrarNuevaOrdenCompra = () => {
@@ -15,7 +16,10 @@ const RegistrarNuevaOrdenCompra = () => {
   const [lugarEntrega, setLugarEntrega] = useState('');
   const [estado, setEstado] = useState('');
   const [montoTotal, setMontoTotal] = useState('');
-  const [fechaEmision, setFechaEmision] = useState('');
+  const [fechaEmision, setFechaEmision] = useState(() => {
+    const today = new Date();
+    return today.toISOString().split('T')[0];
+  });
   const [fechaLimiteEntrega, setFechaLimiteEntrega] = useState('');
   const [clienteSeleccionado, setClienteSeleccionado] = useState('');
   const [numeroContrato, setNumeroContrato] = useState('');
