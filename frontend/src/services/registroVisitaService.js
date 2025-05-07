@@ -37,7 +37,7 @@ export const listarVisitas = async (accessToken) => {
     /* para el caso del hostlocal 'https://itcen-sistema.onrender.com/api/v1/registros_visitas/' */
     /* para el caso del hostlocal 'http://localhost:8000/api/v1/registros_visitas/' */
 
-    const response = await axios.get('https://itcen-sistema.onrender.com/api/v1/registros_visitas/', {
+    const response = await axios.get('http://localhost:8000/api/v1/registros_visitas/', {
       headers: {
         'Authorization': `Bearer ${accessToken}`,
       },

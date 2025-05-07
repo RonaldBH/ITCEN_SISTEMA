@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 const Sidebar = ({
   user,
@@ -8,15 +7,18 @@ const Sidebar = ({
   showListarVisitasPendientes,
   showRegistrarOrdenCompra,
   showListarOrdenesCompra,
+  showRegistrarSubasta,
+  showListarSubastas,
   onLogout,
   showContenidoPrincipal
 }) => {
   const [isVisitasOpen, setIsVisitasOpen] = useState(false);
   const [isOCOpen, setIsOCOpen] = useState(false);
-  const navigate = useNavigate();
+  const [isSubastaOpen, setIsSubastaOpen] = useState(false);
 
   const toggleVisitasDropdown = () => setIsVisitasOpen(!isVisitasOpen);
   const toggleOCDropdown = () => setIsOCOpen(!isOCOpen);
+  const toggleSubastaDropdown = () => setIsSubastaOpen(!isSubastaOpen);
 
   return (
     <div className="d-flex flex-column p-4 sidebar-container">
@@ -96,11 +98,35 @@ const Sidebar = ({
             </div>
           </li>
 
+          {/* Registro Subasta */}
           <li className="mb-3">
-            <button onClick={() => navigate('/dashboard')} className="sidebar-link w-100 text-start">
+            <button className="sidebar-link w-100 text-start" onClick={toggleSubastaDropdown}>
               Registro Subasta
             </button>
+            <div className={`submenu-wrapper ${isSubastaOpen ? 'open' : ''}`}>
+              <ul className="list-unstyled ps-3 mt-2">
+                <li className="mb-2">
+                  <span
+                    role="button"
+                    onClick={showRegistrarSubasta}
+                    className={`submenu-link ${currentContent === 'registrarSubasta' ? 'active' : ''}`}
+                  >
+                    ▸ Registrar nueva subasta
+                  </span>
+                </li>
+                <li>
+                  <span
+                    role="button"
+                    onClick={showListarSubastas}
+                    className={`submenu-link ${currentContent === 'listarSubastas' ? 'active' : ''}`}
+                  >
+                    ▸ Listar subastas
+                  </span>
+                </li>
+              </ul>
+            </div>
           </li>
+
         </ul>
       </nav>
 
@@ -176,5 +202,3 @@ const Sidebar = ({
 };
 
 export default Sidebar;
-
-

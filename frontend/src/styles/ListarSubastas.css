@@ -1,0 +1,70 @@
+/* styles/ListarSubastas.css */
+
+/* Contenedor principal */
+.container {
+    max-width: 1100px;
+    padding: 20px;
+  }
+  
+  /* Títulos */
+  h2 {
+    font-family: 'Helvetica Neue', sans-serif;
+    font-size: 32px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  /* Tabla */
+  .table {
+    width: 100%;
+    margin-top: 20px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .table th, .table td {
+    padding: 16px;
+    text-align: left;
+    font-size: 16px;
+    color: #333;
+  }
+  
+  .table th {
+    background-color: #f8f8f8;
+    font-weight: 600;
+  }
+  
+  .table-striped tbody tr:nth-child(odd) {
+    background-color: #fafafa;
+  }
+  
+  .table td {
+    border-bottom: 1px solid #e0e0e0;
+  }
+  
+  /* Badge de estado */
+  .badge {
+    padding: 6px 12px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: capitalize;
+  }
+  
+  .badge.bg-warning {
+    background-color: #ffcc00;
+    color: #333;
+  }
+  
+  .badge.bg-success {
+    background-color: #4caf50;
+    color: #fff;
+  }
+  
+  .table-responsive {
+    overflow-x: auto;
+  }
+  

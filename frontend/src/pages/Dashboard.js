@@ -6,25 +6,21 @@ import Topbar from '../components/Topbar';
 import MainContent from '../components/MainContent';
 import RegistrarNuevaVisita from '../components/RegistrarNuevaVisita';
 import ListarVisitasPendientes from '../components/ListarVisitasPendientes';
-import ListarOrdenesCompra from '../components/ListarOrdenesCompra'; // Nuevo componente para Listar OC
-import '../styles/dashboard.css';
 import RegistrarNuevaOrdenCompra from '../components/RegistrarNuevaOrdenCompra';
+import ListarOrdenesCompra from '../components/ListarOrdenesCompra';
+import RegistrarSubasta from '../components/RegistrarSubasta';
+import ListarSubastas from '../components/ListarSubastas';
+import '../styles/dashboard.css';
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const { logout, user } = useAuth();
-  const [currentContent, setCurrentContent] = useState(''); // Estado para manejar qué contenido mostrar
+  const [currentContent, setCurrentContent] = useState('');
 
   const handleLogout = () => {
     logout();
     navigate('/');
   };
-
-  const showRegistrarNuevaVisita = () => setCurrentContent('registrarVisita'); // Mostrar Registrar nueva visita
-  const showListarVisitasPendientes = () => setCurrentContent('listarVisitas'); // Mostrar Listar visitas pendientes
-  const showRegistrarOrdenCompra = () => setCurrentContent('registrarOC'); // Mostrar Registrar nueva orden de compra
-  const showListarOrdenesCompra = () => setCurrentContent('listarOC'); // Mostrar Listar órdenes de compra
-  const showContenidoPrincipal = () => setCurrentContent(''); // Mostrar contenido principal
 
   if (!user) {
     navigate('/');
@@ -33,23 +29,28 @@ const Dashboard = () => {
 
   return (
     <div className="d-flex">
-      <Sidebar 
+      <Sidebar
         user={user}
-        showRegistrarNuevaVisita={showRegistrarNuevaVisita}
-        showListarVisitasPendientes={showListarVisitasPendientes}
-        showRegistrarOrdenCompra={showRegistrarOrdenCompra} // Pasar nueva función
-        showListarOrdenesCompra={showListarOrdenesCompra} // Pasar nueva función
-        showContenidoPrincipal={showContenidoPrincipal}
-        onLogout={handleLogout} 
+        currentContent={currentContent}
+        showRegistrarNuevaVisita={() => setCurrentContent('registrarVisita')}
+        showListarVisitasPendientes={() => setCurrentContent('listarVisitas')}
+        showRegistrarOrdenCompra={() => setCurrentContent('registrarOC')}
+        showListarOrdenesCompra={() => setCurrentContent('listarOC')}
+        showRegistrarSubasta={() => setCurrentContent('registrarSubasta')}
+        showListarSubastas={() => setCurrentContent('listarSubastas')}
+        showContenidoPrincipal={() => setCurrentContent('')}
+        onLogout={handleLogout}
       />
       <div className="flex-grow-1">
         <Topbar onLogout={handleLogout} user={user} />
         <div className="container mt-4">
+          {currentContent === '' && <MainContent />}
           {currentContent === 'registrarVisita' && <RegistrarNuevaVisita />}
           {currentContent === 'listarVisitas' && <ListarVisitasPendientes />}
-          {currentContent === 'registrarOC' && <RegistrarNuevaOrdenCompra />} {/* Mostrar Registrar OC */}
-          {currentContent === 'listarOC' && <ListarOrdenesCompra />} {/* Mostrar Listar OC */}
-          {currentContent === '' && <MainContent />} {/* Por defecto, mostrar el contenido principal */}
+          {currentContent === 'registrarOC' && <RegistrarNuevaOrdenCompra />}
+          {currentContent === 'listarOC' && <ListarOrdenesCompra />}
+          {currentContent === 'registrarSubasta' && <RegistrarSubasta />}
+          {currentContent === 'listarSubastas' && <ListarSubastas />}
         </div>
       </div>
     </div>
@@ -57,5 +58,4 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
-
 
