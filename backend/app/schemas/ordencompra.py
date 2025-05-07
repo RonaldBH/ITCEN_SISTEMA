@@ -11,8 +11,8 @@ class OrdenCompraBase(BaseModel):
     lugar_entrega_oc: str
     estado_oc: str
     monto_total_oc: float
-    id_contrato: int
-    id_cliente: int
+    id_contrato: Optional[int] = None
+    id_cliente: Optional[int] = None
     cantidad: Optional[int] = None  # Nuevo atributo
     numero_orden: Optional[str] = None  # Nuevo atributo
     tipo_combustible: Optional[str] = None  # Nuevo atributo

@@ -4,6 +4,7 @@ import { registrarOrdenCompra } from '../services/ordenCompraService';
 import { useAuth } from '../context/AuthContext';
 import '../styles/OrdenCompra.css';
 
+
 const RegistrarNuevaOrdenCompra = () => {
   const [codigoSiga, setCodigoSiga] = useState('');
   const [numeroOrden, setNumeroOrden] = useState('');
@@ -17,38 +18,79 @@ const RegistrarNuevaOrdenCompra = () => {
   const [fechaEmision, setFechaEmision] = useState('');
   const [fechaLimiteEntrega, setFechaLimiteEntrega] = useState('');
   const [clienteSeleccionado, setClienteSeleccionado] = useState('');
+  const [numeroContrato, setNumeroContrato] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const { clientes, loading } = useContext(ClientesContext);
+  const { clientes, loading: clientesLoading } = useContext(ClientesContext);
   const { accessToken, user } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Validar campos obligatorios
+    if (
+      !codigoSiga ||
+      !tipoContrato ||
+      !cantidad ||
+      !unidadEjecutora ||
+      !lugarEntrega ||
+      !estado ||
+      !montoTotal ||
+      !fechaEmision ||
+      !clienteSeleccionado
+    ) {
+      alert('Por favor complete todos los campos obligatorios.');
+      return;
+    }
+
+    if (isNaN(montoTotal) || isNaN(cantidad)) {
+      alert('Cantidad y Monto Total deben ser números válidos.');
+      return;
+    }
 
     if (!user || !user.id) {
       alert('Usuario no autenticado.');
       return;
     }
 
+    let contratoId = null;
+    let tipoCompra = '';
+
+    if (tipoContrato === 'CONTRATO') {
+      if (!numeroContrato) {
+        alert('Por favor ingrese un número de contrato.');
+        return;
+      }
+      contratoId = numeroContrato;
+      tipoCompra = 'Contrato';
+    } else if (tipoContrato === 'DIRECTO') {
+      contratoId = null; // contrato debe ir como null
+      tipoCompra = 'Directa';
+    }
+
+    setLoading(true);
+
     try {
       await registrarOrdenCompra(accessToken, {
         codigo_siga: codigoSiga,
         numero_orden: numeroOrden,
-        tipo_compra: '',
         tipo_contrato: tipoContrato,
         tipo_combustible: tipoCombustible,
-        cantidad: cantidad,
+        cantidad: parseFloat(cantidad),
         unidad_ejecutora: unidadEjecutora,
         lugar_entrega_oc: lugarEntrega,
         estado_oc: estado,
-        monto_total_oc: montoTotal,
+        monto_total_oc: parseFloat(montoTotal),
         fecha_emision_oc: fechaEmision,
         fecha_limite_entrega: fechaLimiteEntrega,
-        id_cliente: clienteSeleccionado,
-        id_contrato: 1,
+        id_cliente: parseInt(clienteSeleccionado),
+        id_contrato: contratoId,
+        tipo_compra: tipoCompra
       });
 
       alert('Orden registrada correctamente');
 
+      // Resetear campos
       setCodigoSiga('');
       setNumeroOrden('');
       setTipoContrato('');
@@ -61,13 +103,16 @@ const RegistrarNuevaOrdenCompra = () => {
       setFechaEmision('');
       setFechaLimiteEntrega('');
       setClienteSeleccionado('');
+      setNumeroContrato('');
     } catch (error) {
       alert('Error al registrar la orden');
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  if (loading) {
+  if (clientesLoading) {
     return <div className="text-center mt-5">Cargando clientes...</div>;
   }
 
@@ -92,10 +137,23 @@ const RegistrarNuevaOrdenCompra = () => {
 
         <div className="col-md-6">
           <div className="form-floating">
-            <input type="text" className="form-control" value={tipoContrato} onChange={(e) => setTipoContrato(e.target.value)} />
+            <select className="form-select" value={tipoContrato} onChange={(e) => setTipoContrato(e.target.value)} required>
+              <option value="">Selecciona un tipo de contrato</option>
+              <option value="CONTRATO">CONTRATO</option>
+              <option value="DIRECTO">DIRECTO</option>
+            </select>
             <label>Tipo de Contrato</label>
           </div>
         </div>
+
+        {tipoContrato === 'CONTRATO' && (
+          <div className="col-md-6">
+            <div className="form-floating">
+              <input type="text" className="form-control" value={numeroContrato} onChange={(e) => setNumeroContrato(e.target.value)} />
+              <label>Número de Contrato</label>
+            </div>
+          </div>
+        )}
 
         <div className="col-md-6">
           <div className="form-floating">
@@ -173,8 +231,8 @@ const RegistrarNuevaOrdenCompra = () => {
         </div>
 
         <div className="col-12">
-          <button type="submit" className="btn btn-dark w-100 py-2" style={{ borderRadius: '12px' }}>
-            Registrar Orden
+          <button type="submit" className="btn btn-dark w-100 py-2" style={{ borderRadius: '12px' }} disabled={loading}>
+            {loading ? 'Registrando...' : 'Registrar Orden'}
           </button>
         </div>
 

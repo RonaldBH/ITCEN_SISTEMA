@@ -1,6 +1,9 @@
 // src/services/ordenCompraService.js
 import axios from 'axios';
 
+  /* para el caso del hostlocal 'https://itcen-sistema.onrender.com/api/v1/ordenes_compra/' */
+  /* para el caso del hostlocal 'http://localhost:8000/api/v1/ordenes_compra/' */
+
 const API_URL = 'https://itcen-sistema.onrender.com/api/v1/ordenes_compra/';
 
 export const obtenerOrdenesCompra = async (token, filtros = {}) => {

@@ -32,3 +32,4 @@ def delete_visita(db: Session, visita_id: int):
     db.delete(db_visita)
     db.commit()
     return db_visita
+

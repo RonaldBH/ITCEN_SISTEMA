@@ -119,7 +119,7 @@ const ListarOrdenesCompra = () => {
                 <td>{orden.lugar_entrega_oc}</td>
                 <td><span className={`estado ${orden.estado_oc.toLowerCase()}`}>{orden.estado_oc}</span></td>
                 <td>{orden.monto_total_oc.toFixed(2)} USD</td>
-                <td>{orden.cliente?.nombre_cliente || 'Desconocido'}</td>
+                <td>{orden.cliente?.id_cliente || 'Desconocido'}</td>
                 <td>{orden.id_contrato}</td>
                 <td>
                   <Link to={`/orden-compra/${orden.id_orden_compra}`} className="btn-ver">Ver</Link>

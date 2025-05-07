@@ -3,19 +3,20 @@ import { useNavigate } from 'react-router-dom';
 
 const Sidebar = ({
   user,
+  currentContent, // Nuevo prop
   showRegistrarNuevaVisita,
   showListarVisitasPendientes,
-  showRegistrarOrdenCompra, // Nueva función para Registro OC
-  showListarOrdenesCompra,  // Nueva función para Listar OC
+  showRegistrarOrdenCompra,
+  showListarOrdenesCompra,
   onLogout,
   showContenidoPrincipal
 }) => {
   const [isVisitasOpen, setIsVisitasOpen] = useState(false);
-  const [isOCOpen, setIsOCOpen] = useState(false); // Estado para el submenú de Registro OC
+  const [isOCOpen, setIsOCOpen] = useState(false);
   const navigate = useNavigate();
 
   const toggleVisitasDropdown = () => setIsVisitasOpen(!isVisitasOpen);
-  const toggleOCDropdown = () => setIsOCOpen(!isOCOpen); // Función para alternar el submenú de OC
+  const toggleOCDropdown = () => setIsOCOpen(!isOCOpen);
 
   return (
     <div className="d-flex flex-column p-4 sidebar-container">
@@ -27,8 +28,12 @@ const Sidebar = ({
       {/* Navegación */}
       <nav className="flex-grow-1">
         <ul className="list-unstyled">
+
           <li className="mb-3">
-            <button onClick={showContenidoPrincipal} className="sidebar-link w-100 text-start">
+            <button
+              onClick={showContenidoPrincipal}
+              className={`sidebar-link w-100 text-start ${currentContent === '' ? 'active' : ''}`}
+            >
               Principal
             </button>
           </li>
@@ -44,7 +49,7 @@ const Sidebar = ({
                   <span
                     role="button"
                     onClick={showRegistrarNuevaVisita}
-                    className="submenu-link"
+                    className={`submenu-link ${currentContent === 'registrarVisita' ? 'active' : ''}`}
                   >
                     ▸ Registrar nueva visita
                   </span>
@@ -53,7 +58,7 @@ const Sidebar = ({
                   <span
                     role="button"
                     onClick={showListarVisitasPendientes}
-                    className="submenu-link"
+                    className={`submenu-link ${currentContent === 'listarVisitas' ? 'active' : ''}`}
                   >
                     ▸ Listar visitas pendientes
                   </span>
@@ -72,8 +77,8 @@ const Sidebar = ({
                 <li className="mb-2">
                   <span
                     role="button"
-                    onClick={showRegistrarOrdenCompra} // Función para Registrar OC
-                    className="submenu-link"
+                    onClick={showRegistrarOrdenCompra}
+                    className={`submenu-link ${currentContent === 'registrarOC' ? 'active' : ''}`}
                   >
                     ▸ Registrar nueva orden
                   </span>
@@ -81,8 +86,8 @@ const Sidebar = ({
                 <li>
                   <span
                     role="button"
-                    onClick={showListarOrdenesCompra} // Función para Listar OC
-                    className="submenu-link"
+                    onClick={showListarOrdenesCompra}
+                    className={`submenu-link ${currentContent === 'listarOC' ? 'active' : ''}`}
                   >
                     ▸ Listar órdenes de compra
                   </span>
@@ -158,9 +163,18 @@ const Sidebar = ({
           background-color: rgba(0, 0, 0, 0.05);
           transform: translateX(6px);
         }
+
+        .sidebar-link.active,
+        .submenu-link.active {
+          background-color: #ffdaff !important;
+          font-weight: 600;
+          color: #000;
+        }
       `}</style>
     </div>
   );
 };
 
 export default Sidebar;
+
+
