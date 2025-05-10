@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { obtenerOrdenesCompra, actualizarOrdenCompra } from '../services/ordenCompraService';
+import { crearEntrega, obtenerEntregas } from '../services/entregaService';
 import { ClientesContext } from '../context/ClientesContext';
-import { Link } from 'react-router-dom';
 import '../styles/ListarOrdenesCompra.css';
+import BotonAcciones from '../elementos/BotonAcciones';
+import dayjs from 'dayjs';
 
 const ListarOrdenesCompra = () => {
   const [ordenesCompra, setOrdenesCompra] = useState([]);
@@ -12,13 +14,71 @@ const ListarOrdenesCompra = () => {
   const [fechaInicio, setFechaInicio] = useState('');
   const [fechaFin, setFechaFin] = useState('');
 
+  // Estados para gestión de entregas
+  const [showCrearEntrega, setShowCrearEntrega] = useState(false);
+  const [showVerEntregas, setShowVerEntregas] = useState(false);
+  const [selectedOrden, setSelectedOrden] = useState(null);
+  const [nuevaEntrega, setNuevaEntrega] = useState({
+    fecha_entrega: '',
+    cantidad_entregada: '',
+    estado_entrega: '',
+  });
+  const [entregasList, setEntregasList] = useState([]);
+
   const { clientes, loading: clientesLoading } = useContext(ClientesContext);
   const { accessToken } = useAuth();
 
-  const estadosDisponibles = [
-    'Emitida', 'Pendiente', 'Procesada', 'En Camino', 'Entregada', 'Cancelada'
-  ];
+  // Abrir modal para crear entrega
+  const manejarGenerarEntrega = (orden) => {
+    setSelectedOrden(orden);
+    setShowCrearEntrega(true);
+    setNuevaEntrega({ fecha_entrega: '', cantidad_entregada: '', estado_entrega: '' });
+  };
 
+  // Abrir modal para ver entregas
+  const manejarVerEntregas = async (orden) => {
+    try {
+      const response = await obtenerEntregas(orden.id_orden_compra, accessToken);
+      setEntregasList(response);
+      setSelectedOrden(orden);
+      setShowVerEntregas(true);
+    } catch (error) {
+      console.error('Error al obtener las entregas:', error);
+      alert('Hubo un error al obtener las entregas.');
+    }
+  };
+
+  // Envío de nueva entrega
+  const handleSubmitEntrega = async (e) => {
+    e.preventDefault();
+    const { fecha_entrega, cantidad_entregada, estado_entrega } = nuevaEntrega;
+
+    if (!fecha_entrega || !cantidad_entregada || !estado_entrega) {
+      alert('Todos los campos de entrega son obligatorios.');
+      return;
+    }
+
+    if (!window.confirm(`¿Deseas generar una entrega para la Orden #${selectedOrden.id_orden_compra}?`)) {
+      return;
+    }
+
+    try {
+      const payload = {
+        ...nuevaEntrega,
+        cantidad_entregada: parseFloat(cantidad_entregada),
+        id_orden_compra: selectedOrden.id_orden_compra,
+      };
+      const response = await crearEntrega(payload, accessToken);
+      alert(`Entrega generada con éxito (ID: ${response.id_entrega})`);
+      setShowCrearEntrega(false);
+    } catch (error) {
+      console.error('Error al generar entrega:', error);
+      alert('Hubo un error al generar la entrega.');
+    }
+  };
+
+  // Cambiar estado de la orden
+  const estadosDisponibles = ['Emitida', 'Pendiente', 'Procesada', 'En Camino', 'Entregada', 'Cancelada'];
   const cambiarEstado = async (id, nuevoEstado) => {
     try {
       const datos = { estado_oc: nuevoEstado };
@@ -40,7 +100,7 @@ const ListarOrdenesCompra = () => {
         const ordenes = await obtenerOrdenesCompra(accessToken, clienteSeleccionado, fechaInicio, fechaFin);
         setOrdenesCompra(ordenes);
       } catch (error) {
-        console.error("Error al obtener las órdenes de compra:", error);
+        console.error('Error al obtener las órdenes de compra:', error);
       } finally {
         setLoading(false);
       }
@@ -146,17 +206,106 @@ const ListarOrdenesCompra = () => {
                     ))}
                   </select>
                 </td>
-                <td>{orden.monto_total_oc.toFixed(2)} USD</td>
+                <td>S/ {orden.monto_total_oc.toFixed(2)}</td>
                 <td>{orden.cliente?.nombre_cliente || 'Desconocido'}</td>
                 <td>{orden.id_contrato}</td>
                 <td>
-                  <Link to={`/orden-compra/${orden.id_orden_compra}`} className="btn-ver">Ver</Link>
+                  <BotonAcciones
+                    orden={orden}
+                    manejarGenerarEntrega={manejarGenerarEntrega}
+                    manejarVerEntregas={manejarVerEntregas}
+                  />
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+
+      {/* Modal Entrega */}
+      {showCrearEntrega && selectedOrden && (
+        <div className="modal-overlay">
+          <div className="delivery-modal">
+            <h3>Ingresar Entrega</h3>
+            <p className="info-text">
+              Orden de Compra #{selectedOrden.id_orden_compra} - {selectedOrden.numero_orden}
+            </p>
+            <form onSubmit={handleSubmitEntrega}>
+              <label htmlFor="fecha_entrega">Fecha de Entrega</label>
+              <input
+                type="date"
+                id="fecha_entrega"
+                className="form-control"
+                value={nuevaEntrega.fecha_entrega}
+                onChange={(e) => setNuevaEntrega({ ...nuevaEntrega, fecha_entrega: e.target.value })}
+              />
+              <label htmlFor="cantidad_entregada">Cantidad Entregada</label>
+              <input
+                type="number"
+                id="cantidad_entregada"
+                className="form-control"
+                value={nuevaEntrega.cantidad_entregada}
+                onChange={(e) => setNuevaEntrega({ ...nuevaEntrega, cantidad_entregada: e.target.value })}
+              />
+              <label htmlFor="estado_entrega">Estado de Entrega</label>
+              <select
+                id="estado_entrega"
+                className="form-control"
+                value={nuevaEntrega.estado_entrega}
+                onChange={(e) => setNuevaEntrega({ ...nuevaEntrega, estado_entrega: e.target.value })}
+              >
+                <option value="">Seleccione un estado</option>
+                <option value="Pendiente">Pendiente</option>
+                <option value="Entregada">Entregada</option>
+              </select>
+              <div className="modal-footer">
+                <button type="button" onClick={() => setShowCrearEntrega(false)} className="btn btn-secondary">
+                  Cancelar
+                </button>
+                <button type="submit" className="btn btn-primary">Guardar Entrega</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Ver entregas */}
+      {showVerEntregas && selectedOrden && (
+        <div className="modal-overlay">
+          <div className="delivery-modal">
+            <h3>Entregas de Orden #{selectedOrden.numero_orden}</h3>
+            <table className="entregas-table">
+              <thead>
+                <tr>
+                  <th>Fecha de Entrega</th>
+                  <th>Cantidad Entregada</th>
+                  <th>Estado</th>
+                </tr>
+              </thead>
+              <tbody>
+                {entregasList.length === 0 ? (
+                  <tr>
+                    <td colSpan="3">No hay entregas registradas.</td>
+                  </tr>
+                ) : (
+                  entregasList.map((entrega) => (
+                    <tr key={entrega.id_entrega}>
+                      <td>{dayjs(entrega.fecha_entrega).format('DD/MM/YYYY')}</td>
+                      <td>{entrega.cantidad_entregada}</td>
+                      <td>{entrega.estado_entrega}</td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+            <div className="modal-footer">
+              <button type="button" onClick={() => setShowVerEntregas(false)} className="btn btn-secondary">
+                Cerrar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

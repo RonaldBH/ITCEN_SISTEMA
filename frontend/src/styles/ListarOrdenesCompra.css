@@ -1,147 +1,254 @@
 /* Contenedor principal */
 .ordenes-container {
-    background-color: #ffffff;
-    padding: 2rem;
-    border-radius: 1.25rem;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
-    margin-top: 2rem;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background-color: #ffffff;
+  padding: 2rem;
+  border-radius: 1.25rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+  margin-top: 2rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  position: relative;
+  z-index: 1;
+}
+
+/* Título principal */
+.ordenes-title {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+/* Ajustes en la tabla */
+.table-responsive {
+  overflow-x: auto;
+  border-radius: 1rem;
+  margin-top: 1rem;
+}
+
+.ordenes-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+/* Ajustes para columnas de la tabla */
+.ordenes-table th,
+.ordenes-table td {
+  padding: 1rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #333;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+  .ordenes-container {
+    padding: 1rem;
   }
-  
-  /* Título principal */
+
   .ordenes-title {
-    font-size: 2rem;
-    font-weight: 600;
-    color: #1a1a1a;
-    text-align: center;
-    margin-bottom: 2rem;
+    font-size: 1.5rem;
   }
-  
-  /* Inputs de filtros */
-  input[type="date"],
-  select.form-select {
-    padding: 0.75rem;
-    border: 1px solid #ccc;
-    border-radius: 0.75rem;
-    font-size: 1rem;
-    width: 100%;
-    background-color: #fafafa;
-    transition: all 0.2s ease-in-out;
-  }
-  
-  input[type="date"]:focus,
-  select.form-select:focus {
-    outline: none;
-    border-color: #999;
-    background-color: #fff;
-  }
-  
-  /* Tabla */
-  .table-responsive {
-    overflow-x: auto;
-    border-radius: 1rem;
-  }
-  
-  .ordenes-table {
-    width: 100%;
-    border-collapse: collapse;
-    background-color: white;
-    border-radius: 1rem;
-    overflow: hidden;
-  }
-  
-  .ordenes-table th {
-    background-color: #f9f9f9;
-    font-weight: 600;
-    padding: 1rem;
-    text-align: center;
-    color: #555;
-    font-size: 0.95rem;
-  }
-  
+
+  .ordenes-table th,
   .ordenes-table td {
-    padding: 1rem;
-    text-align: center;
-    font-size: 0.9rem;
-    color: #333;
-    border-bottom: 1px solid #f0f0f0;
+    font-size: 0.8rem;
+    padding: 0.5rem;
   }
-  
-  /* Estado visual */
-  .estado {
-    padding: 6px 14px;
-    border-radius: 999px;
-    font-weight: 500;
-    font-size: 0.85rem;
-  }
-  
-  .estado.activa {
-    background-color: #e6fdf1;
-    color: #007d4c;
-  }
-  
-  .estado.inactiva {
-    background-color: #ffe9e9;
-    color: #b90000;
-  }
-  
-  /* Botón de acción */
-  .btn-ver {
-    background-color: #ffdaff;
-    color: #333;
-    padding: 8px 16px;
-    border-radius: 999px;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 0.85rem;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    transition: all 0.2s ease-in-out;
-  }
-  
-  .btn-ver:hover {
-    background-color: #ffc8f5;
-    color: #000;
-  }
-  
-  /* Responsive */
-  @media (max-width: 768px) {
-    .ordenes-container {
-      padding: 1rem;
-    }
-  
-    .ordenes-title {
-      font-size: 1.5rem;
-    }
-  
-    .ordenes-table th,
-    .ordenes-table td {
-      font-size: 0.8rem;
-      padding: 0.5rem;
-    }
-  }
-  
-  .estado-select {
-    min-width: 120px;
-    padding: 4px;
-    border-radius: 5px;
-  }
-  
-  .estado-select.emitida {
-    background-color: #e0f7fa;
-  }
-  .estado-select.pendiente {
-    background-color: #fff3cd;
-  }
-  .estado-select.procesada {
-    background-color: #d1ecf1;
-  }
-  .estado-select.en\ camino {
-    background-color: #cce5ff;
-  }
-  .estado-select.entregada {
-    background-color: #d4edda;
-  }
-  .estado-select.cancelada {
-    background-color: #f8d7da;
-  }
-  
+}
+
+/* Estilos para las celdas de estado */
+.ordenes-table td .estado-select {
+  min-width: 120px;
+  padding: 6px;
+  border-radius: 5px;
+  font-size: 0.9rem; /* Ajuste para que se vea igual que el resto de botones */
+  border: 1px solid #ccc; /* Borde sutil */
+}
+
+/* Estilos para los diferentes estados */
+.estado-select.emitida {
+  background-color: #e0f7fa;
+}
+.estado-select.pendiente {
+  background-color: #fff3cd;
+}
+.estado-select.procesada {
+  background-color: #d1ecf1;
+}
+.estado-select.en-camino {
+  background-color: #cce5ff;
+}
+.estado-select.entregada {
+  background-color: #d4edda;
+}
+.estado-select.cancelada {
+  background-color: #f8d7da;
+}
+
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro y semitransparente */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* Para que se muestre encima de todo */
+}
+
+/* Modal Content */
+/* Contenido del modal, renombrado */
+.delivery-modal {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 400px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 2001;
+  /* Asegúrate de que siempre sea visible */
+  display: block;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  /* … */
+  z-index: 9999;
+}
+
+.modal {
+  /* … */
+  z-index: 10000;
+}
+
+/* Overlay con blur */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+/* Modal translucent, bordes redondeados, sombra suave */
+.delivery-modal {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(20px);
+  border-radius: 24px;
+  padding: 32px;
+  width: 360px;
+  max-width: 90%;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Título limpio */
+.delivery-modal h3 {
+  margin: 0 0 12px;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #1c1c1e;
+}
+
+/* Texto informativo */
+.delivery-modal .info-text {
+  margin: 0 0 24px;
+  font-size: 0.9rem;
+  color: #3a3a3c;
+}
+
+/* Estilos de labels e inputs */
+.delivery-modal label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: #3a3a3c;
+}
+
+.delivery-modal input,
+.delivery-modal select {
+  width: 100%;
+  padding: 10px 14px;
+  margin-bottom: 20px;
+  border: none;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.6);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.08);
+  font-size: 1rem;
+  outline: none;
+}
+
+.delivery-modal input:focus,
+.delivery-modal select:focus {
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.3);
+}
+
+/* Botones en línea */
+.delivery-modal .button-group {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+/* Botones estilo Apple */
+.delivery-modal .btn-sm {
+  padding: 8px 16px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.delivery-modal .btn-primary {
+  background-color: #007aff;
+  color: white;
+  border: none;
+}
+
+.delivery-modal .btn-secondary {
+  background-color: rgba(60, 60, 67, 0.12);
+  color: #1c1c1e;
+  border: none;
+}
+
+/* Mejora visual para el select de estado dentro de la tabla */
+.estado-select {
+  appearance: none; /* Oculta la flecha por defecto */
+  background: rgba(255, 255, 255, 0.8);
+  border: none;
+  border-radius: 12px;
+  padding: 8px 14px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.06), inset 0 -1px 1px rgba(0,0,0,0.05);
+  font-weight: 500;
+  font-size: 0.85rem;
+  color: #333;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+  text-align: center;
+}
+
+.estado-select:hover,
+.estado-select:focus {
+  box-shadow: 0 6px 12px rgba(0,0,0,0.12), inset 0 -1px 1px rgba(0,0,0,0.05);
+  outline: none;
+}
+
+/* Opcional: icono de flecha usando background */
+.estado-select {
+  background-image: url("data:image/svg+xml;charset=UTF-8,<svg fill='gray' height='20' viewBox='0 0 24 24' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 16px;
+}

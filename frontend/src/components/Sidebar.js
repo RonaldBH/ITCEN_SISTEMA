@@ -36,14 +36,14 @@ const Sidebar = ({
               onClick={showContenidoPrincipal}
               className={`sidebar-link w-100 text-start ${currentContent === '' ? 'active' : ''}`}
             >
-              Principal
+              Dashboard
             </button>
           </li>
 
           {/* Registro de Visitas */}
           <li className="mb-3">
             <button className="sidebar-link w-100 text-start" onClick={toggleVisitasDropdown}>
-              Registro de Visitas
+              Visitas
             </button>
             <div className={`submenu-wrapper ${isVisitasOpen ? 'open' : ''}`}>
               <ul className="list-unstyled ps-3 mt-2">
@@ -72,7 +72,7 @@ const Sidebar = ({
           {/* Registro OC */}
           <li className="mb-3">
             <button className="sidebar-link w-100 text-start" onClick={toggleOCDropdown}>
-              Registro OC
+              OC
             </button>
             <div className={`submenu-wrapper ${isOCOpen ? 'open' : ''}`}>
               <ul className="list-unstyled ps-3 mt-2">
@@ -101,7 +101,7 @@ const Sidebar = ({
           {/* Registro Subasta */}
           <li className="mb-3">
             <button className="sidebar-link w-100 text-start" onClick={toggleSubastaDropdown}>
-              Registro Subasta
+              Subastas
             </button>
             <div className={`submenu-wrapper ${isSubastaOpen ? 'open' : ''}`}>
               <ul className="list-unstyled ps-3 mt-2">

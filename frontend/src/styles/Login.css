@@ -27,7 +27,7 @@
 
 /* Caja de login encima del fondo */
 .login-box {
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.507);
   padding: 3rem;
   border-radius: 25px;
   box-shadow: 5px 9px 20px rgb(239, 150, 255);
@@ -158,7 +158,7 @@
   align-items: center;
   border-radius: 25px;
   border: 0.5px solid #e0b3d8;
-  background: linear-gradient(90deg, #ffffff, #fbd3ff);
+  background: linear-gradient(90deg, #ffffff56, #fbd3ff);
   padding: 0 20px;
   width: 100%;
   box-sizing: border-box;
@@ -192,7 +192,7 @@
 
 button {
   width: 100%;
-  background-color: #800080;
+  background-color: #80008087;
   color: white;
   border: none;
   padding: 15px;
@@ -256,3 +256,19 @@ button:active {
     transform: translateX(8px) translateY(0); /* Se mueve 200px hacia la derecha */
   }
 }
+
+.background-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2; /* Más al fondo que el blur */
+}
+
+/* Elimina o ajusta el fondo de imagen si usas video */
+.login-fullscreen::before {
+  display: none; /* o elimina esta regla si ya no necesitas el fondo de imagen */
+}
+

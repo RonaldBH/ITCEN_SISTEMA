@@ -1,6 +1,9 @@
 from pydantic import BaseModel
 from typing import Optional
 from datetime import date
+from app.schemas.guiaremision import GuiaRemisionOut
+from app.schemas.logisticatransporte import LogisticaTransportOut
+from app.schemas.factura import FacturaOut
 
 # Base
 class EntregaBase(BaseModel):
@@ -21,6 +24,9 @@ class EntregaUpdate(BaseModel):
 # Respuesta
 class EntregaOut(EntregaBase):
     id_entrega: int
+    guiaremision: Optional[GuiaRemisionOut] = None
+    logisticatransport: Optional[LogisticaTransportOut] = None
+    factura: Optional[FacturaOut] = None
 
     class Config:
         orm_mode = True

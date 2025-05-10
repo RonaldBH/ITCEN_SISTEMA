@@ -33,8 +33,10 @@ const Login = () => {
 
   return (
     <div className="login-fullscreen">
-      <div className="bola1"></div>
-      <div className="bola2"></div>
+      <video autoPlay muted loop className="background-video">
+      <source src="/imagenes/fondoanimado2.mp4" type="video/mp4" />
+        Tu navegador no soporta la reproducción de video.
+      </video>
       <div className="corner-images">
         <img src="/imagenes/logo1.png" alt="Logo ITCEN" className="logo-top-left" />
         <img src="/imagenes/logoDispenzador.png" alt="Retroexcavadora" className="logo-bottom-right" />
