@@ -38,7 +38,7 @@ const Login = () => {
         Tu navegador no soporta la reproducción de video.
       </video>
       <div className="corner-images">
-        <img src="/imagenes/logo1.png" alt="Logo ITCEN" className="logo-top-left" />
+        <img src="/imagenes/logo12.png" alt="Logo ITCEN" className="logo-top-left" />
         <img src="/imagenes/logoDispenzador.png" alt="Retroexcavadora" className="logo-bottom-right" />
       </div>
       <div className="login-box">

@@ -134,7 +134,7 @@ const RegistrarNuevaOrdenCompra = () => {
               onChange={(e) => setCodigoSiga(e.target.value)}
               required
             />
-            <label htmlFor="codigoSiga">Código SIGA</label>
+            <label htmlFor="codigoSiga">Código SIAF</label>
           </div>
         </div>
 

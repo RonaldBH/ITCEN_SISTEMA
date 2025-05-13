@@ -1,10 +1,12 @@
-/* RegistrarSubasta.css */
-
 /* Contenedor principal */
 .subasta-container {
   max-width: 800px;
   margin: 0 auto;
   padding: 30px;
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(255, 218, 255, 0.4);
+  animation: fadeIn 0.5s ease;
 }
 
 /* Título */
@@ -12,30 +14,68 @@
   font-family: 'Helvetica Neue', sans-serif;
   font-size: 32px;
   font-weight: 600;
-  color: #333;
+  color: #222;
   margin-bottom: 30px;
   text-align: center;
+  animation: fadeIn 0.8s ease;
 }
 
 /* Formulario */
 .form-floating {
   margin-bottom: 20px;
+  transition: all 0.3s ease;
 }
 
 .form-floating input,
 .form-floating select {
+  width: 100%;
+  padding: 10px 14px;
+  font-size: 16px;
   border-radius: 8px;
+  border: 1px solid #ccc;
+  background-color: #fefefe;
+  transition: all 0.3s ease;
 }
 
+.form-floating input:focus,
+.form-floating select:focus {
+  border-color: #ff91d5;
+  box-shadow: 0 0 6px rgba(255, 145, 213, 0.4);
+  outline: none;
+}
+
+/* Botones */
 button {
+  display: inline-block;
+  background-color: #ff91d5;
+  color: #fff;
+  padding: 10px 18px;
+  font-size: 16px;
+  font-weight: 500;
+  border: none;
   border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+  background-color: #ff69c2;
+  transform: scale(1.05);
 }
 
 button:disabled {
-  opacity: 0.7;
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
-/* Estilos adicionales para hacer que los botones sean más atractivos */
-button:hover {
-  background-color: #444;
+/* Animaciones */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

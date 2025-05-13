@@ -1,12 +1,16 @@
 from sqlalchemy.orm import Session
 from app.models.subasta import Subasta
 from app.schemas.subastas import SubastaCreate, SubastaUpdate
+from sqlalchemy.orm import joinedload
+
 
 def get_subasta(db: Session, subasta_id: int):
     return db.query(Subasta).filter(Subasta.id_subasta == subasta_id).first()
 
 def get_subastas(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(Subasta).offset(skip).limit(limit).all()
+    return db.query(Subasta)\
+             .options(joinedload(Subasta.contrato))\
+             .offset(skip).limit(limit).all()
 
 def create_subasta(db: Session, subasta: SubastaCreate):
     db_subasta = Subasta(

@@ -1,54 +1,44 @@
-// src/services/servicesContrato.js
 import axios from 'axios';
 
-// Base URL configurable vía .env, con fallback a localhost
 const BASE_URL = process.env.REACT_APP_API_URL || 'https://itcen-sistema.onrender.com';
 const CONTRATOS_PATH = '/api/v1/contratos/';
 const API_URL = `${BASE_URL}${CONTRATOS_PATH}`;
 
-/**
- * Obtiene un contrato por su ID.
- * @param {number|string} idContrato  ID del contrato
- * @param {string} token             Bearer token de autenticación
- * @returns {Promise<object>}        Objeto contrato
- */
+// headers reutilizables
+const authHeaders = (token) => ({
+  'Content-Type': 'application/json',
+  Authorization: `Bearer ${token}`,
+});
+
 export const obtenerContrato = async (idContrato, token) => {
-  const response = await axios.get(`${API_URL}${idContrato}/`, {
+  const res = await axios.get(`${API_URL}${idContrato}/`, {
+    headers: authHeaders(token),
+  });
+  return res.data;
+};
+
+export const crearContrato = async (data, token) => {
+  const res = await axios.post(API_URL, data, {
+    headers: authHeaders(token),
+  });
+  return res.data;
+};
+
+export const actualizarContrato = async (idContrato, data, token) => {
+  const res = await axios.put(`${API_URL}${idContrato}/`, data, {
+    headers: authHeaders(token),
+  });
+  return res.data;
+};
+
+/**
+ * Nuevo: obtiene todos los contratos de una subasta
+ * GET /api/v1/contratos? id_subasta=123
+ */
+export const obtenerContratosPorSubasta = async (idSubasta, token) => {
+  const res = await axios.get(API_URL, {
+    params: { id_subasta: idSubasta },
     headers: { Authorization: `Bearer ${token}` },
   });
-  return response.data;
-};
-
-/**
- * Crea un nuevo contrato.
- * (Útil si quieres asociar un contrato a una subasta que aún no tiene uno)
- * @param {object} data  Datos del contrato: { numero_contrato, fecha_firma, monto_total_contrato, id_subasta, ... }
- * @param {string} token Bearer token
- * @returns {Promise<object>}  Objeto contrato creado
- */
-export const crearContrato = async (data, token) => {
-  const response = await axios.post(API_URL, data, {
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  return response.data;
-};
-
-/**
- * Actualiza un contrato existente.
- * @param {number|string} idContrato  ID del contrato
- * @param {object} data              Campos a actualizar
- * @param {string} token             Bearer token
- * @returns {Promise<object>}        Objeto contrato actualizado
- */
-export const actualizarContrato = async (idContrato, data, token) => {
-  const response = await axios.put(`${API_URL}${idContrato}/`, data, {
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  return response.data;
+  return res.data; // array de contratos
 };

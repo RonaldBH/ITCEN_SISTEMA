@@ -2,8 +2,22 @@ from sqlalchemy.orm import Session
 from app.models.contrato import Contrato
 from app.schemas.contrato import ContratoCreate, ContratoUpdate
 
-def get_contratos(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(Contrato).offset(skip).limit(limit).all()
+def get_contratos(
+    db: Session,
+    skip: int = 0,
+    limit: int = 100,
+    filters: dict = {}
+):
+    query = db.query(Contrato)
+
+    if filters.get("estado_contrato"):
+        query = query.filter(Contrato.estado_contrato == filters["estado_contrato"])
+    if filters.get("id_cliente"):
+        query = query.filter(Contrato.id_cliente == filters["id_cliente"])
+    if filters.get("id_subasta"):
+        query = query.filter(Contrato.id_subasta == filters["id_subasta"])
+
+    return query.offset(skip).limit(limit).all()
 
 def get_contrato(db: Session, contrato_id: int):
     return db.query(Contrato).filter(Contrato.id_contrato == contrato_id).first()

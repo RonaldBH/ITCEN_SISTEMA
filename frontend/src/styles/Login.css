@@ -54,7 +54,7 @@
 .logo-top-left {
   position: absolute;
   z-index: 10;
-  max-height: 150px;
+  max-height: 200px;
   max-width: 50vw; /* se adapta al ancho de la pantalla */
 }
 

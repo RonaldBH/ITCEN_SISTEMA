@@ -3,18 +3,31 @@ import { useAuth } from '../context/AuthContext';
 import { obtenerOrdenesCompra, actualizarOrdenCompra } from '../services/ordenCompraService';
 import { crearEntrega, obtenerEntregas } from '../services/entregaService';
 import { ClientesContext } from '../context/ClientesContext';
-import '../styles/ListarOrdenesCompra.css';
 import BotonAcciones from '../elementos/BotonAcciones';
 import dayjs from 'dayjs';
+import '../styles/ListarOrdenesCompra.css';
+
+
 
 const ListarOrdenesCompra = () => {
+  const { clientes, loading: clientesLoading } = useContext(ClientesContext);
+  const { accessToken } = useAuth();
+
+  // Estados de datos
   const [ordenesCompra, setOrdenesCompra] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // Estados de filtro activos (disparan fetch)
   const [clienteSeleccionado, setClienteSeleccionado] = useState('');
   const [fechaInicio, setFechaInicio] = useState('');
   const [fechaFin, setFechaFin] = useState('');
 
-  // Estados para gestión de entregas
+  // Estados intermedios de inputs de filtro
+  const [inputCliente, setInputCliente] = useState('');
+  const [inputFechaInicio, setInputFechaInicio] = useState('');
+  const [inputFechaFin, setInputFechaFin] = useState('');
+
+  // Modales de entrega
   const [showCrearEntrega, setShowCrearEntrega] = useState(false);
   const [showVerEntregas, setShowVerEntregas] = useState(false);
   const [selectedOrden, setSelectedOrden] = useState(null);
@@ -25,195 +38,205 @@ const ListarOrdenesCompra = () => {
   });
   const [entregasList, setEntregasList] = useState([]);
 
-  const { clientes, loading: clientesLoading } = useContext(ClientesContext);
-  const { accessToken } = useAuth();
-
-  // Abrir modal para crear entrega
-  const manejarGenerarEntrega = (orden) => {
-    setSelectedOrden(orden);
-    setShowCrearEntrega(true);
-    setNuevaEntrega({ fecha_entrega: '', cantidad_entregada: '', estado_entrega: '' });
-  };
-
-  // Abrir modal para ver entregas
-  const manejarVerEntregas = async (orden) => {
-    try {
-      const response = await obtenerEntregas(orden.id_orden_compra, accessToken);
-      setEntregasList(response);
-      setSelectedOrden(orden);
-      setShowVerEntregas(true);
-    } catch (error) {
-      console.error('Error al obtener las entregas:', error);
-      alert('Hubo un error al obtener las entregas.');
-    }
-  };
-
-  // Envío de nueva entrega
-  const handleSubmitEntrega = async (e) => {
-    e.preventDefault();
-    const { fecha_entrega, cantidad_entregada, estado_entrega } = nuevaEntrega;
-
-    if (!fecha_entrega || !cantidad_entregada || !estado_entrega) {
-      alert('Todos los campos de entrega son obligatorios.');
-      return;
-    }
-
-    if (!window.confirm(`¿Deseas generar una entrega para la Orden #${selectedOrden.id_orden_compra}?`)) {
-      return;
-    }
-
-    try {
-      const payload = {
-        ...nuevaEntrega,
-        cantidad_entregada: parseFloat(cantidad_entregada),
-        id_orden_compra: selectedOrden.id_orden_compra,
-      };
-      const response = await crearEntrega(payload, accessToken);
-      alert(`Entrega generada con éxito (ID: ${response.id_entrega})`);
-      setShowCrearEntrega(false);
-    } catch (error) {
-      console.error('Error al generar entrega:', error);
-      alert('Hubo un error al generar la entrega.');
-    }
-  };
-
-  // Cambiar estado de la orden
-  const estadosDisponibles = ['Emitida', 'Pendiente', 'Procesada', 'En Camino', 'Entregada', 'Cancelada'];
-  const cambiarEstado = async (id, nuevoEstado) => {
-    try {
-      const datos = { estado_oc: nuevoEstado };
-      const updatedOrden = await actualizarOrdenCompra(id, datos, accessToken);
-      setOrdenesCompra(prev =>
-        prev.map(orden =>
-          orden.id_orden_compra === id ? { ...orden, estado_oc: updatedOrden.estado_oc } : orden
-        )
-      );
-    } catch (error) {
-      console.error('Error al cambiar el estado de la orden:', error);
-      alert('Error al actualizar el estado');
-    }
-  };
-
+  // Carga de órdenes cuando cambian los filtros activos
   useEffect(() => {
-    const fetchOrdenesCompra = async () => {
+    const fetchOrdenes = async () => {
+      setLoading(true);
       try {
-        const ordenes = await obtenerOrdenesCompra(accessToken, clienteSeleccionado, fechaInicio, fechaFin);
-        setOrdenesCompra(ordenes);
-      } catch (error) {
-        console.error('Error al obtener las órdenes de compra:', error);
+        const filtros = {
+          id_cliente: clienteSeleccionado || undefined,
+          fecha_inicio: fechaInicio || undefined,
+          fecha_fin: fechaFin || undefined,
+        };
+        const data = await obtenerOrdenesCompra(accessToken, filtros);
+        setOrdenesCompra(data);
+      } catch (err) {
+        console.error('Error al obtener órdenes:', err);
       } finally {
         setLoading(false);
       }
     };
-
-    fetchOrdenesCompra();
+    fetchOrdenes();
   }, [accessToken, clienteSeleccionado, fechaInicio, fechaFin]);
 
   if (loading || clientesLoading) {
-    return <div className="text-center mt-5">Cargando...</div>;
+    return <div className="text-center mt-5">Cargando…</div>;
   }
+
+  // Aplica los inputs a los filtros activos
+  const aplicarFiltros = () => {
+    setClienteSeleccionado(inputCliente);
+    setFechaInicio(inputFechaInicio);
+    setFechaFin(inputFechaFin);
+  };
+
+  // Placeholder handlers
+  const emitirFactura = ent => {
+    // lógica para emitir factura
+    alert(`Emitir factura para entrega #${ent.id_entrega}`);
+  };
+  const realizarGuia = ent => {
+    // lógica para generar guía de remisión
+    alert(`Generar guía de remisión para entrega #${ent.id_entrega}`);
+  };
+
+  // Estados de respaldo (caso backend no filtre)
+  const ordenesFiltradas = ordenesCompra.filter(o =>
+    !clienteSeleccionado || o.cliente?.id_cliente === parseInt(clienteSeleccionado, 10)
+  );
+
+  const estadosDisponibles = [
+    'Emitida', 'Pendiente', 'Procesada',
+    'En Camino', 'Entregada', 'Cancelada'
+  ];
+
+  // Funciones auxiliares
+  const formatDate = fecha =>
+    fecha ? new Date(fecha).toLocaleDateString() : '-';
+
+  const cambiarEstado = async (id, nuevoEstado) => {
+    try {
+      const updated = await actualizarOrdenCompra(id, { estado_oc: nuevoEstado }, accessToken);
+      setOrdenesCompra(prev =>
+        prev.map(o => o.id_orden_compra === id
+          ? { ...o, estado_oc: updated.estado_oc }
+          : o
+        )
+      );
+    } catch {
+      alert('No se pudo actualizar el estado.');
+    }
+  };
+
+  const manejarGenerarEntrega = orden => {
+    setSelectedOrden(orden);
+    setNuevaEntrega({ fecha_entrega: '', cantidad_entregada: '', estado_entrega: '' });
+    setShowCrearEntrega(true);
+  };
+
+  const manejarVerEntregas = async orden => {
+    try {
+      const lista = await obtenerEntregas(orden.id_orden_compra, accessToken);
+      setEntregasList(lista);
+      setSelectedOrden(orden);
+      setShowVerEntregas(true);
+    } catch {
+      alert('No se pudieron obtener las entregas.');
+    }
+  };
+
+  const handleSubmitEntrega = async e => {
+    e.preventDefault();
+    const { fecha_entrega, cantidad_entregada, estado_entrega } = nuevaEntrega;
+    if (!fecha_entrega || !cantidad_entregada || !estado_entrega) {
+      return alert('Completa todos los campos de entrega.');
+    }
+    if (!window.confirm(`¿Crear entrega para OC #${selectedOrden.id_orden_compra}?`)) return;
+
+    try {
+      await crearEntrega(
+        { ...nuevaEntrega,
+          cantidad_entregada: parseFloat(cantidad_entregada),
+          id_orden_compra: selectedOrden.id_orden_compra
+        },
+        accessToken
+      );
+      alert('Entrega creada con éxito.');
+      setShowCrearEntrega(false);
+    } catch {
+      alert('No se pudo crear la entrega.');
+    }
+  };
 
   return (
     <div className="ordenes-container">
       <h2 className="ordenes-title">Órdenes de Compra</h2>
 
-      {/* Filtros */}
-      <div className="row mb-4">
-        <div className="col-md-6 mb-3">
-          <label htmlFor="fechaInicio" className="form-label">Fecha Inicio</label>
+      {/* === Filtros === */}
+      <div className="row g-3 align-items-end mb-4">
+        <div className="col-md-4">
+          <label>Fecha Inicio</label>
           <input
             type="date"
-            id="fechaInicio"
             className="form-control"
-            value={fechaInicio}
-            onChange={(e) => setFechaInicio(e.target.value)}
+            value={inputFechaInicio}
+            onChange={e => setInputFechaInicio(e.target.value)}
           />
         </div>
-        <div className="col-md-6 mb-3">
-          <label htmlFor="fechaFin" className="form-label">Fecha Fin</label>
+        <div className="col-md-4">
+          <label>Fecha Fin</label>
           <input
             type="date"
-            id="fechaFin"
             className="form-control"
-            value={fechaFin}
-            onChange={(e) => setFechaFin(e.target.value)}
+            value={inputFechaFin}
+            onChange={e => setInputFechaFin(e.target.value)}
           />
         </div>
+        <div className="col-md-4">
+          <label>Cliente</label>
+          <select
+            className="form-select"
+            value={inputCliente}
+            onChange={e => setInputCliente(e.target.value)}
+          >
+            <option value="">Todos los clientes</option>
+            {clientes.map(c => (
+              <option key={c.id_cliente} value={c.id_cliente}>
+                {c.nombre_cliente}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+      <div className="text-end mb-4">
+        <button className="btn-aplicar-filtros" onClick={aplicarFiltros}>
+          Aplicar filtros
+        </button>
       </div>
 
-      <div className="mb-3">
-        <label htmlFor="clienteSeleccionado" className="form-label">Filtrar por Cliente</label>
-        <select
-          id="clienteSeleccionado"
-          className="form-select"
-          value={clienteSeleccionado}
-          onChange={(e) => setClienteSeleccionado(e.target.value)}
-        >
-          <option value="">Selecciona un cliente</option>
-          {clientes.map((cliente) => (
-            <option key={cliente.id_cliente} value={cliente.id_cliente}>
-              {cliente.nombre_cliente}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {/* Tabla */}
+      {/* === Tabla === */}
       <div className="table-responsive">
         <table className="ordenes-table">
           <thead>
             <tr>
-              <th>ID</th>
-              <th>N° Orden</th>
-              <th>Código SIGA</th>
-              <th>Fecha Emisión</th>
-              <th>Fecha Límite</th>
-              <th>Tipo Compra</th>
-              <th>Tipo Contrato</th>
-              <th>Tipo Combustible</th>
-              <th>Cantidad</th>
-              <th>Unidad Ejecutora</th>
-              <th>Lugar Entrega</th>
-              <th>Estado</th>
-              <th>Monto Total</th>
-              <th>Cliente</th>
-              <th>Contrato</th>
-              <th>Acciones</th>
+              <th>ID</th><th>N° Orden</th><th>Código SIGA</th><th>Emisión</th>
+              <th>Límite</th><th>Tipo Compra</th><th>Contrato</th><th>Combustible</th>
+              <th>Cant.</th><th>Unidad</th><th>Lugar</th><th>Estado</th>
+              <th>Total</th><th>Cliente</th><th>Acciones</th>
             </tr>
           </thead>
           <tbody>
-            {ordenesCompra.map((orden) => (
-              <tr key={orden.id_orden_compra}>
-                <td>{orden.id_orden_compra}</td>
-                <td>{orden.numero_orden || '-'}</td>
-                <td>{orden.codigo_siga}</td>
-                <td>{new Date(orden.fecha_emision_oc).toLocaleDateString()}</td>
-                <td>{orden.fecha_limite_entrega ? new Date(orden.fecha_limite_entrega).toLocaleDateString() : '-'}</td>
-                <td>{orden.tipo_compra}</td>
-                <td>{orden.tipo_contrato || '-'}</td>
-                <td>{orden.tipo_combustible || '-'}</td>
-                <td>{orden.cantidad ?? '-'}</td>
-                <td>{orden.unidad_ejecutora || '-'}</td>
-                <td>{orden.lugar_entrega_oc}</td>
+            {ordenesFiltradas.map(o => (
+              <tr key={o.id_orden_compra}>
+                <td>{o.id_orden_compra}</td>
+                <td>{o.numero_orden || '-'}</td>
+                <td>{o.codigo_siga}</td>
+                <td>{formatDate(o.fecha_emision_oc)}</td>
+                <td>{formatDate(o.fecha_limite_entrega)}</td>
+                <td>{o.tipo_compra}</td>
+                <td>{o.tipo_contrato || '-'}</td>
+                <td>{o.tipo_combustible || '-'}</td>
+                <td>{o.cantidad ?? '-'}.Gls</td>
+                <td>{o.unidad_ejecutora || '-'}</td>
+                <td>{o.lugar_entrega_oc}</td>
                 <td>
                   <select
-                    className={`form-select estado-select ${orden.estado_oc.toLowerCase()}`}
-                    value={orden.estado_oc}
-                    onChange={(e) => cambiarEstado(orden.id_orden_compra, e.target.value)}
+                    className={`form-select estado-select ${o.estado_oc.toLowerCase()}`}
+                    value={o.estado_oc}
+                    onChange={e => cambiarEstado(o.id_orden_compra, e.target.value)}
                   >
-                    {estadosDisponibles.map((estado) => (
-                      <option key={estado} value={estado}>{estado}</option>
+                    {estadosDisponibles.map(est => (
+                      <option key={est} value={est}>{est}</option>
                     ))}
                   </select>
                 </td>
-                <td>S/ {orden.monto_total_oc.toFixed(2)}</td>
-                <td>{orden.cliente?.nombre_cliente || 'Desconocido'}</td>
-                <td>{orden.id_contrato}</td>
+                <td>S/ {o.monto_total_oc.toFixed(2)}</td>
+                <td>{o.cliente?.nombre_cliente || '---'}</td>
                 <td>
                   <BotonAcciones
-                    orden={orden}
-                    manejarGenerarEntrega={manejarGenerarEntrega}
-                    manejarVerEntregas={manejarVerEntregas}
+                    orden={o}
+                    manejarGenerarEntrega={() => manejarGenerarEntrega(o)}
+                    manejarVerEntregas={() => manejarVerEntregas(o)}
                   />
                 </td>
               </tr>
@@ -222,84 +245,113 @@ const ListarOrdenesCompra = () => {
         </table>
       </div>
 
-      {/* Modal Entrega */}
+      {/* === Modal Crear Entrega === */}
       {showCrearEntrega && selectedOrden && (
         <div className="modal-overlay">
           <div className="delivery-modal">
             <h3>Ingresar Entrega</h3>
             <p className="info-text">
-              Orden de Compra #{selectedOrden.id_orden_compra} - {selectedOrden.numero_orden}
+              OC #{selectedOrden.id_orden_compra} • {selectedOrden.numero_orden}
             </p>
             <form onSubmit={handleSubmitEntrega}>
-              <label htmlFor="fecha_entrega">Fecha de Entrega</label>
+              <label>Fecha de Entrega</label>
               <input
                 type="date"
-                id="fecha_entrega"
                 className="form-control"
                 value={nuevaEntrega.fecha_entrega}
-                onChange={(e) => setNuevaEntrega({ ...nuevaEntrega, fecha_entrega: e.target.value })}
+                onChange={e =>
+                  setNuevaEntrega({ ...nuevaEntrega, fecha_entrega: e.target.value })
+                }
               />
-              <label htmlFor="cantidad_entregada">Cantidad Entregada</label>
+              <label>Cantidad Entregada</label>
               <input
                 type="number"
-                id="cantidad_entregada"
                 className="form-control"
                 value={nuevaEntrega.cantidad_entregada}
-                onChange={(e) => setNuevaEntrega({ ...nuevaEntrega, cantidad_entregada: e.target.value })}
+                onChange={e =>
+                  setNuevaEntrega({ ...nuevaEntrega, cantidad_entregada: e.target.value })
+                }
               />
-              <label htmlFor="estado_entrega">Estado de Entrega</label>
+              <label>Estado de Entrega</label>
               <select
-                id="estado_entrega"
                 className="form-control"
                 value={nuevaEntrega.estado_entrega}
-                onChange={(e) => setNuevaEntrega({ ...nuevaEntrega, estado_entrega: e.target.value })}
+                onChange={e =>
+                  setNuevaEntrega({ ...nuevaEntrega, estado_entrega: e.target.value })
+                }
               >
-                <option value="">Seleccione un estado</option>
+                <option value="">Selecciona estado</option>
                 <option value="Pendiente">Pendiente</option>
                 <option value="Entregada">Entregada</option>
               </select>
               <div className="modal-footer">
-                <button type="button" onClick={() => setShowCrearEntrega(false)} className="btn btn-secondary">
+                <button
+                  type="button"
+                  onClick={() => setShowCrearEntrega(false)}
+                  className="btn btn-secondary"
+                >
                   Cancelar
                 </button>
-                <button type="submit" className="btn btn-primary">Guardar Entrega</button>
+                <button type="submit" className="btn btn-primary">
+                  Guardar
+                </button>
               </div>
             </form>
           </div>
         </div>
       )}
 
-      {/* Modal Ver entregas */}
+      {/* === Modal Ver Entregas === */}
       {showVerEntregas && selectedOrden && (
-        <div className="modal-overlay">
-          <div className="delivery-modal">
-            <h3>Entregas de Orden #{selectedOrden.numero_orden}</h3>
-            <table className="entregas-table">
-              <thead>
-                <tr>
-                  <th>Fecha de Entrega</th>
-                  <th>Cantidad Entregada</th>
-                  <th>Estado</th>
-                </tr>
-              </thead>
-              <tbody>
-                {entregasList.length === 0 ? (
-                  <tr>
-                    <td colSpan="3">No hay entregas registradas.</td>
-                  </tr>
-                ) : (
-                  entregasList.map((entrega) => (
-                    <tr key={entrega.id_entrega}>
-                      <td>{dayjs(entrega.fecha_entrega).format('DD/MM/YYYY')}</td>
-                      <td>{entrega.cantidad_entregada}</td>
-                      <td>{entrega.estado_entrega}</td>
+        <div className="modal-overlay" role="dialog" aria-modal="true">
+          <div className="delivery-modal w-3/4 max-w-2xl p-6">
+            <h4 className="text-lg font-semibold mb-4">Entregas de OC #{selectedOrden.numero_orden} - {selectedOrden.cliente?.nombre_cliente} </h4>
+
+            {entregasList.length === 0 ? (
+              <div className="alert alert-info mb-4">Sin entregas registradas.</div>
+            ) : (
+              <div className="table-scroll max-h-80 overflow-y-auto mb-4">
+                <table className="table w-full">
+                  <thead>
+                    <tr>
+                      <th className="px-3 py-2">Fecha</th>
+                      <th className="px-3 py-2">Cantidad</th>
+                      <th className="px-3 py-2">Estado</th>
+                      <th className="px-3 py-2">Acciones</th>
                     </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-            <div className="modal-footer">
-              <button type="button" onClick={() => setShowVerEntregas(false)} className="btn btn-secondary">
+                  </thead>
+                  <tbody>
+                    {entregasList.map(ent => (
+                      <tr key={ent.id_entrega} className="hover:bg-gray-50">
+                        <td className="px-3 py-2">{dayjs(ent.fecha_entrega).format('DD/MM/YYYY')}</td>
+                        <td className="px-3 py-2">{ent.cantidad_entregada} Gls</td>
+                        <td className="px-3 py-2">{ent.estado_entrega}</td>
+                        <td className="px-3 py-2 space-x-2">
+                          <button
+                            className="btn btn-sm btn-primary px-4 py-1"
+                            onClick={() => emitirFactura(ent)}
+                          >
+                            Emitir Factura
+                          </button>
+                          <button
+                            className="btn btn-sm btn-secondary px-4 py-1"
+                            onClick={() => realizarGuia(ent)}
+                          >
+                            Guía Remisión
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            <div className="modal-footer text-right">
+              <button
+                className="btn btn-secondary px-6 py-2"
+                onClick={() => setShowVerEntregas(false)}
+              >
                 Cerrar
               </button>
             </div>

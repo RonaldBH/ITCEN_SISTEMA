@@ -7,9 +7,31 @@ from app.core.database import get_db
 
 router = APIRouter(tags=["OrdenCompra"])
 
+from typing import Optional
+from datetime import date
+
 @router.get("/", response_model=List[OrdenCompraOut])
-def read_ordenes(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    return orden_compra_crud.get_ordenes_compra(db, skip=skip, limit=limit)
+def read_ordenes(
+    skip: int = 0,
+    limit: int = 100,
+    id_cliente: Optional[int] = None,
+    fecha_inicio: Optional[date] = None,
+    fecha_fin: Optional[date] = None,
+    db: Session = Depends(get_db)
+):
+    """
+    - id_cliente: filtra por cliente
+    - fecha_inicio / fecha_fin: rango sobre fecha_emision_oc
+    """
+    return orden_compra_crud.get_ordenes_compra(
+        db,
+        skip=skip,
+        limit=limit,
+        id_cliente=id_cliente,
+        fecha_inicio=fecha_inicio,
+        fecha_fin=fecha_fin
+    )
+
 
 @router.get("/{orden_id}", response_model=OrdenCompraOut)
 def read_orden(orden_id: int, db: Session = Depends(get_db)):

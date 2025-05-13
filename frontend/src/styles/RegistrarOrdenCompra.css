@@ -1,66 +1,95 @@
 /* Contenedor principal */
 .registro-container {
-    background-color: #ffffff;
-    padding: 2rem;
-    border-radius: 1.25rem;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
-    margin-top: 2rem;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background-color: #ffffff;
+  padding: 2.5rem;
+  border-radius: 1.5rem;
+  box-shadow: 0 12px 32px rgba(255, 218, 255, 0.25);
+  margin-top: 2rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Título */
+.registro-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  text-align: center;
+  margin-bottom: 2rem;
+  letter-spacing: -0.5px;
+}
+
+/* Formulario */
+.registro-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Inputs y selects */
+.registro-form .form-control,
+.registro-form .form-select {
+  padding: 0.8rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: 1rem;
+  font-size: 1rem;
+  background-color: #fafafa;
+  transition: all 0.3s ease;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.registro-form .form-control:focus,
+.registro-form .form-select:focus {
+  outline: none;
+  border-color: #ff90e8;
+  background-color: #fff;
+  box-shadow: 0 0 0 3px rgba(255, 218, 255, 0.4);
+}
+
+/* Etiquetas */
+.registro-form label {
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  display: block;
+  color: #333;
+}
+
+/* Botón de envío */
+.btn-registrar {
+  background-color: #ffdaff;
+  color: #333;
+  padding: 12px 28px;
+  border-radius: 1rem;
+  font-weight: 600;
+  font-size: 1rem;
+  border: none;
+  box-shadow: 0 4px 10px rgba(255, 218, 255, 0.4);
+  transition: all 0.25s ease-in-out;
+  cursor: pointer;
+  margin-top: 1.5rem;
+}
+
+.btn-registrar:hover {
+  background-color: #ffc8f5;
+  color: #000;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(255, 180, 255, 0.5);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .registro-container {
+    padding: 1.25rem;
   }
-  
-  /* Título */
+
   .registro-title {
-    font-size: 2rem;
-    font-weight: 600;
-    color: #1a1a1a;
-    text-align: center;
-    margin-bottom: 2rem;
+    font-size: 1.6rem;
   }
-  
-  /* Estilos para inputs y selects */
-  .registro-form .form-control,
-  .registro-form .form-select {
-    padding: 0.75rem;
-    border: 1px solid #ccc;
-    border-radius: 0.75rem;
-    font-size: 1rem;
-    background-color: #fafafa;
-    transition: all 0.2s ease-in-out;
-  }
-  
-  .registro-form .form-control:focus,
-  .registro-form .form-select:focus {
-    outline: none;
-    border-color: #999;
-    background-color: #fff;
-  }
-  
-  /* Botón de envío */
+
   .btn-registrar {
-    background-color: #ffdaff;
-    color: #333;
-    padding: 10px 24px;
-    border-radius: 1rem;
-    font-weight: 600;
-    font-size: 1rem;
-    border: none;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    transition: all 0.2s ease-in-out;
+    width: 100%;
+    padding: 12px;
   }
-  
-  .btn-registrar:hover {
-    background-color: #ffc8f5;
-    color: #000;
-  }
-  
-  /* Responsive */
-  @media (max-width: 768px) {
-    .registro-container {
-      padding: 1rem;
-    }
-  
-    .registro-title {
-      font-size: 1.5rem;
-    }
-  }
-  
+}

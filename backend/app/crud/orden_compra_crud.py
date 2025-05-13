@@ -1,14 +1,36 @@
 from sqlalchemy.orm import Session
 from app.models.orden_compra import OrdenCompra
+from typing import Optional
+from datetime import date
+from sqlalchemy import and_
 from app.schemas.ordencompra import OrdenCompraCreate, OrdenCompraUpdate
 
 from sqlalchemy.orm import joinedload
 
-def get_ordenes_compra(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(OrdenCompra).options(
+def get_ordenes_compra(
+    db: Session,
+    skip: int = 0,
+    limit: int = 100,
+    id_cliente: Optional[int] = None,
+    fecha_inicio: Optional[date] = None,
+    fecha_fin: Optional[date] = None
+):
+    query = db.query(OrdenCompra).options(
         joinedload(OrdenCompra.cliente),
         joinedload(OrdenCompra.contrato)
-    ).offset(skip).limit(limit).all()
+    )
+
+    # Aplico filtros si vienen
+    if id_cliente is not None:
+        query = query.filter(OrdenCompra.id_cliente == id_cliente)
+
+    if fecha_inicio is not None:
+        query = query.filter(OrdenCompra.fecha_emision_oc >= fecha_inicio)
+
+    if fecha_fin is not None:
+        query = query.filter(OrdenCompra.fecha_emision_oc <= fecha_fin)
+
+    return query.offset(skip).limit(limit).all()
 
 def get_orden_compra(db: Session, orden_id: int):
     return db.query(OrdenCompra).options(
