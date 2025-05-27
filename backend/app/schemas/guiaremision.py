@@ -1,36 +1,42 @@
 from pydantic import BaseModel
 from typing import Optional
 from datetime import date
+from typing import List, Optional
+from .guiaremision_item import GuiaRemisionItemCreate, GuiaRemisionItemOut
 
 # Base
 class GuiaRemisionBase(BaseModel):
-    numero_guia: str
     fecha_emision_guia: date
     lugar_salida: str
-    lugar_entrega_guia: str
+    lugar_llegada: str
+    modalidad_traslado: str
+    retorno_envases: Optional[str] = "NO"
+    retorno_vacio: Optional[str] = "NO"
+    placa_vehiculo: str
     dni_conductor: str
-    placa_vehiculo_guia: str
-    estado_guia: str
     id_entrega: int
 
-# Crear
 class GuiaRemisionCreate(GuiaRemisionBase):
-    pass  # id_guia_remision se genera automáticamente
+    items: List[GuiaRemisionItemCreate]
 
-# Actualizar
 class GuiaRemisionUpdate(BaseModel):
-    numero_guia: Optional[str] = None
-    fecha_emision_guia: Optional[date] = None
-    lugar_salida: Optional[str] = None
-    lugar_entrega_guia: Optional[str] = None
-    dni_conductor: Optional[str] = None
-    placa_vehiculo_guia: Optional[str] = None
-    estado_guia: Optional[str] = None
-    id_entrega: Optional[int] = None
+    lugar_salida: Optional[str]
+    lugar_llegada: Optional[str]
+    modalidad_traslado: Optional[str]
+    retorno_envases: Optional[str]
+    retorno_vacio: Optional[str]
+    placa_vehiculo: Optional[str]
+    dni_conductor: Optional[str]
 
-# Respuesta
 class GuiaRemisionOut(GuiaRemisionBase):
     id_guia_remision: int
+    numero_guia: Optional[str]
+    items: List[GuiaRemisionItemOut]
+    class Config:
+        orm_mode = True
 
+class GuiaConRespuesta(BaseModel):
+    guia: GuiaRemisionOut
+    nubefact_respuesta: dict
     class Config:
         orm_mode = True

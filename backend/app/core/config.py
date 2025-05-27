@@ -5,5 +5,10 @@ class Settings(BaseSettings):
     SECRET_KEY: str
     ALGORITHM: str
     ACCESS_TOKEN_EXPIRE_MINUTES: int
+    NUBEFACT_API_URL:str
+    NUBEFACT_API_TOKEN:str
 
-settings = Settings()  # Esto debería funcionar ahora con las variables de entorno de Render
+    class Config:
+        env_file = ".env"  
+
+settings = Settings()  

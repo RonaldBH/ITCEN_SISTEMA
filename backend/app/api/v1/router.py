@@ -5,7 +5,7 @@ from .endpoints import (clientes_routes, subasta_routes,
                         guia_remision_routes, logistica_tranporte_routes, 
                         factura_routes, pago_routes, seguimiento_pagos_routes,
                         vale_consumo_routes, acta_custodia_routes,
-                        usuario_routes, auth, registro_visita_routes)
+                        usuario_routes, auth, registro_visita_routes,compras_routes,proveedor_routes)
 
 api_router = APIRouter()
 
@@ -25,6 +25,9 @@ api_router.include_router(acta_custodia_routes.router,prefix="/actas_custodia", 
 api_router.include_router(usuario_routes.router,prefix="/usuario", tags=["Usuario"])
 api_router.include_router(auth.router,prefix="/auth", tags=["Auth"])
 api_router.include_router(registro_visita_routes.router,prefix="/registros_visitas", tags=["RegistrosdeVisitas"])
+api_router.include_router(compras_routes.router,prefix="/compras", tags=["Compras"])
+api_router.include_router(proveedor_routes.router,prefix="/proveedor", tags=["Proveedores"])
+
 
 
 

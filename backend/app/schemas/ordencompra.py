@@ -1,32 +1,30 @@
+# app/schemas/ordencompra.py
+
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
 from datetime import date
 from app.schemas.cliente import ClienteOut
 from app.schemas.contrato import ContratoOut
+from app.schemas.orden_item import OrdenItemCreate, OrdenItemOut
 
 
-# Base
 class OrdenCompraBase(BaseModel):
     codigo_siga: str
     fecha_emision_oc: date
-    fecha_limite_entrega: date
+    fecha_limite_entrega: Optional[date] = None
     tipo_compra: str
     lugar_entrega_oc: str
     estado_oc: str
     monto_total_oc: float
+    numero_orden: Optional[str] = None
     id_contrato: Optional[int] = None
     id_cliente: Optional[int] = None
-    cantidad: Optional[int] = None  # Nuevo atributo
-    numero_orden: Optional[str] = None  # Nuevo atributo
-    tipo_combustible: Optional[str] = None  # Nuevo atributo
-    tipo_contrato: Optional[str] = None  # Nuevo atributo
-    unidad_ejecutora: Optional[str] = None  # Nuevo atributo
 
-# Crear
+
 class OrdenCompraCreate(OrdenCompraBase):
-    pass  # id_orden_compra se genera automáticamente
+    items: List[OrdenItemCreate]
 
-# Actualizar
+
 class OrdenCompraUpdate(BaseModel):
     codigo_siga: Optional[str] = None
     fecha_emision_oc: Optional[date] = None
@@ -35,19 +33,17 @@ class OrdenCompraUpdate(BaseModel):
     lugar_entrega_oc: Optional[str] = None
     estado_oc: Optional[str] = None
     monto_total_oc: Optional[float] = None
+    numero_orden: Optional[str] = None
     id_contrato: Optional[int] = None
     id_cliente: Optional[int] = None
-    cantidad: Optional[int] = None  # Nuevo atributo
-    numero_orden: Optional[str] = None  # Nuevo atributo
-    tipo_combustible: Optional[str] = None  # Nuevo atributo
-    tipo_contrato: Optional[str] = None  # Nuevo atributo
-    unidad_ejecutora: Optional[str] = None  # Nuevo atributo
 
-# Respuesta
+
 class OrdenCompraOut(OrdenCompraBase):
     id_orden_compra: int
     cliente: Optional[ClienteOut]
     contrato: Optional[ContratoOut]
+    items: List[OrdenItemOut]
 
     class Config:
+        # en Pydantic v2 reemplazar orm_mode por from_attributes=True
         orm_mode = True

@@ -1,72 +1,249 @@
+/* Barra superior */
 .topbar-navbar {
-    position: relative;
-    z-index: 1030;
+  position: fixed; /* Cambiar a fixed para que quede fija en pantalla */
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000; /* Debe ser menor que el modal */
+  background-color: #fff; /* Si la topbar es transparente, puede "verse" debajo */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+
+body.body-with-topbar {
+  padding-top: 65px; /* Solo cuando hay topbar */
+}
+
+/* Botón de icono */
+.icon-btn {
+  background: transparent;
+  border: none;
+  color: #442c3f;
+  transition: color 0.2s ease, transform 0.2s ease;
+  position: relative;
+  cursor: pointer;
+}
+
+.icon-btn:hover {
+  color: #030003;
+  transform: scale(1.1);
+}
+
+.icon-btn:focus {
+  outline: none;
+}
+
+/* Estructura para dropdown */
+.dropdown-wrapper {
+  position: relative;
+}
+
+/* Menú desplegable personalizado */
+.dropdown-menu-custom {
+  position: absolute;
+  top: 120%;
+  right: 0;
+  background: #ffffffcc;
+  border: 1px solid #ddd;
+  border-radius: 0.75rem;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  padding: 0.75rem;
+  z-index: 1100; /* Más alto que topbar para dropdown */
+  min-width: 220px;
+  animation: fadeIn 0.2s ease-in-out;
+  backdrop-filter: blur(12px);
+}
+
+.dropdown-menu-custom button {
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  padding: 8px 12px;
+  font-size: 14px;
+  color: #1d021c;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+}
+
+.dropdown-menu-custom button:hover {
+  background-color: #f1f1f1;
+}
+
+/* Información del usuario */
+.user-info {
+  padding-bottom: 10px;
+}
+
+.user-info p {
+  margin-bottom: 0.75rem;
+  color: #333;
+  font-size: 15px;
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
   }
-  
-  .icon-btn {
-    background: transparent;
-    border: none;
-    color: #333;
-    transition: color 0.2s ease, transform 0.2s ease;
-    position: relative;
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
-  
-  .icon-btn:hover {
-    color: #0d6efd;
-    transform: scale(1.1);
+}
+
+@keyframes modalFadeSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.98);
   }
-  
-  .icon-btn:focus {
-    outline: none;
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
-  
-  /* Nueva estructura para que no se desborde */
-  .dropdown-wrapper {
-    position: relative;
-  }
-  
-  /* Menú desplegable personalizado */
-  .dropdown-menu-custom {
-    position: absolute;
-    top: 120%;
-    right: 0;
-    background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 0.75rem;
-    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-    padding: 0.75rem;
-    z-index: 1050;
-    min-width: 200px;
-    animation: fadeIn 0.2s ease-in-out;
-  }
-  
-  .dropdown-menu-custom button {
-    background: none;
-    border: none;
-    width: 100%;
-    text-align: left;
-    padding: 8px 12px;
-    font-size: 14px;
-    color: #333;
-    cursor: pointer;
-  }
-  
-  .dropdown-menu-custom button:hover {
-    background-color: #f8f9fa;
-  }
-  
-  .user-info {
-    padding-bottom: 10px;
-  }
-  
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(-8px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
+}
+
+/* Estilo Apple para el modal */
+.elegant-modal {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(14px);
+  border-radius: 1rem;
+  padding: 2rem;
+  margin-top: 5vh;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+  animation: modalFadeSlide 0.3s ease-out;
+  transition: all 0.3s ease-in-out;
+  font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  position: relative;
+  z-index: 1101; /* Más alto que la topbar y dropdown */
+}
+
+/* Fondo oscuro del modal */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 1100; /* Más alto que topbar */
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+/* Título del modal */
+.modal-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1c1c1e;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+/* Contenedor de botones */
+.modal-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+  gap: 0.75rem;
+}
+
+/* Estilos generales de botones */
+.modal-buttons .btn {
+  min-width: 100px;
+  border-radius: 12px;
+  font-weight: 500;
+  padding: 10px 16px;
+  font-size: 14px;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  white-space: nowrap;
+}
+
+/* Botón Editar (azul personalizado) */
+.modal-buttons .btn-primary {
+  background-color: #1a73e8;
+  border: none;
+  color: #fff;
+}
+
+.modal-buttons .btn-primary:hover {
+  background-color: #1666c1;
+  transform: translateY(-1px);
+}
+
+/* Botón Guardar (verde) */
+.modal-buttons .btn-success {
+  background-color: #28a745;
+  border: none;
+  color: #fff;
+}
+
+.modal-buttons .btn-success:hover {
+  background-color: #218838;
+  transform: translateY(-1px);
+}
+
+/* Botón Cancelar (gris oscuro) */
+.modal-buttons .btn-secondary {
+  background-color: #6c757d;
+  border: none;
+  color: #fff;
+}
+
+.modal-buttons .btn-secondary:hover {
+  background-color: #5a6268;
+  transform: translateY(-1px);
+}
+
+/* Botón Cerrar (claro) */
+.modal-buttons .btn-light {
+  background-color: #f1f1f1;
+  border: none;
+  color: #1c1c1e;
+}
+
+.modal-buttons .btn-light:hover {
+  background-color: #e0e0e0;
+  transform: translateY(-1px);
+}
+
+/* Botón Cerrar Sesión (oscuro) */
+.modal-buttons .btn-dark {
+  background-color: #1c1c1e;
+  border: none;
+  color: #ffffff;
+}
+
+.modal-buttons .btn-dark:hover {
+  background-color: #000000;
+  transform: translateY(-1px);
+}
+
+.app-title {
+  margin: 0;
+  padding: 0.8rem 2rem;
+  font-size: 1.21rem;
+  font-weight: 600;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #3c3c3c;
+
+  border-radius: 20px;
+
+  box-shadow: 0 8px 16px rgba(255, 192, 233, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  display: inline-block;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.app-title:hover {
+  color: #030003;
+  transform: scale(1.02);
+  box-shadow: 0 12px 20px rgba(255, 182, 232, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}

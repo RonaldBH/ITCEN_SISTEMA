@@ -1,11 +1,9 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from app.models.orden_compra import OrdenCompra
-from typing import Optional
-from datetime import date
-from sqlalchemy import and_
+from app.models.orden_item import OrdenItem
 from app.schemas.ordencompra import OrdenCompraCreate, OrdenCompraUpdate
-
-from sqlalchemy.orm import joinedload
+from datetime import date
+from typing import Optional
 
 def get_ordenes_compra(
     db: Session,
@@ -17,48 +15,53 @@ def get_ordenes_compra(
 ):
     query = db.query(OrdenCompra).options(
         joinedload(OrdenCompra.cliente),
-        joinedload(OrdenCompra.contrato)
+        joinedload(OrdenCompra.contrato),
+        joinedload(OrdenCompra.items)
     )
-
-    # Aplico filtros si vienen
     if id_cliente is not None:
         query = query.filter(OrdenCompra.id_cliente == id_cliente)
-
     if fecha_inicio is not None:
         query = query.filter(OrdenCompra.fecha_emision_oc >= fecha_inicio)
-
     if fecha_fin is not None:
         query = query.filter(OrdenCompra.fecha_emision_oc <= fecha_fin)
-
     return query.offset(skip).limit(limit).all()
 
 def get_orden_compra(db: Session, orden_id: int):
     return db.query(OrdenCompra).options(
         joinedload(OrdenCompra.cliente),
-        joinedload(OrdenCompra.contrato)
+        joinedload(OrdenCompra.contrato),
+        joinedload(OrdenCompra.items)
     ).filter(OrdenCompra.id_orden_compra == orden_id).first()
 
-
-def create_orden_compra(db: Session, orden: OrdenCompraCreate):
-    db_orden = OrdenCompra(**orden.dict())
+def create_orden_compra(db: Session, orden_in: OrdenCompraCreate):
+    # 1) Crear cabecera
+    db_orden = OrdenCompra(**orden_in.dict(exclude={"items"}))
     db.add(db_orden)
+    db.flush()
+    # 2) Crear ítems
+    for it in orden_in.items:
+        db_item = OrdenItem(
+            **it.dict(),
+            id_orden_compra=db_orden.id_orden_compra
+        )
+        db.add(db_item)
     db.commit()
     db.refresh(db_orden)
     return db_orden
 
-def update_orden_compra(db: Session, orden_id: int, orden: OrdenCompraUpdate):
+def update_orden_compra(db: Session, orden_id: int, orden_in: OrdenCompraUpdate):
     db_orden = get_orden_compra(db, orden_id)
-    if db_orden is None:
+    if not db_orden:
         return None
-    for key, value in orden.dict(exclude_unset=True).items():
-        setattr(db_orden, key, value)
+    for key, val in orden_in.dict(exclude_unset=True).items():
+        setattr(db_orden, key, val)
     db.commit()
     db.refresh(db_orden)
     return db_orden
 
 def delete_orden_compra(db: Session, orden_id: int):
     db_orden = get_orden_compra(db, orden_id)
-    if db_orden is None:
+    if not db_orden:
         return None
     db.delete(db_orden)
     db.commit()

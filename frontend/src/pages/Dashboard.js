@@ -10,6 +10,14 @@ import RegistrarNuevaOrdenCompra from '../components/RegistrarNuevaOrdenCompra';
 import ListarOrdenesCompra from '../components/ListarOrdenesCompra';
 import RegistrarSubasta from '../components/RegistrarSubasta';
 import ListarSubastas from '../components/ListarSubastas';
+import RegistrarClientes from '../components/RegistrarClientes';
+import ListarClientes from '../components/ListarClientes';
+import ListarProveedores from '../components/ListarProveedores';
+import RegistrarProveedores from '../components/RegistrarProveedores';
+import RegistrarCompra from '../components/RegistrarCompra';
+import ListarCompras from '../components/ListarCompras';
+
+
 import '../styles/dashboard.css';
 
 const Dashboard = () => {
@@ -38,6 +46,12 @@ const Dashboard = () => {
         showListarOrdenesCompra={() => setCurrentContent('listarOC')}
         showRegistrarSubasta={() => setCurrentContent('registrarSubasta')}
         showListarSubastas={() => setCurrentContent('listarSubastas')}
+        showRegistrarCliente={() => setCurrentContent('registrarCliente')}
+        showListarClientes={() => setCurrentContent('listarClientes')}
+        showListarProveedores={() => setCurrentContent('listarProveedores')}
+        showRegistrarProveedor={() => setCurrentContent('registrarProveedores')}
+        showRegistrarCompra={() => setCurrentContent('registrarCompra')}
+        showListarCompras={() => setCurrentContent('listarCompras')}
         showContenidoPrincipal={() => setCurrentContent('')}
         onLogout={handleLogout}
       />
@@ -51,6 +65,13 @@ const Dashboard = () => {
           {currentContent === 'listarOC' && <ListarOrdenesCompra />}
           {currentContent === 'registrarSubasta' && <RegistrarSubasta />}
           {currentContent === 'listarSubastas' && <ListarSubastas />}
+          {currentContent === 'registrarCliente' && <RegistrarClientes />}
+          {currentContent === 'listarClientes' && <ListarClientes />}
+          {currentContent === 'listarProveedores' && <ListarProveedores />}
+          {currentContent === 'registrarProveedores' && <RegistrarProveedores />}
+          {currentContent === 'registrarCompra' && <RegistrarCompra />}
+          {currentContent === 'listarCompras' && <ListarCompras />}
+
         </div>
       </div>
     </div>
@@ -58,4 +79,3 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
-

@@ -1,3 +1,5 @@
+// src/components/RegistrarNuevaOrdenCompra.jsx
+
 import React, { useState, useContext } from 'react';
 import { ClientesContext } from '../context/ClientesContext';
 import { registrarOrdenCompra } from '../services/ordenCompraService';
@@ -5,124 +7,125 @@ import { useAuth } from '../context/AuthContext';
 import '../styles/RegistrarOrdenCompra.css';
 
 const RegistrarNuevaOrdenCompra = () => {
-  const [codigoSiga, setCodigoSiga] = useState('');
-  const [numeroOrden, setNumeroOrden] = useState('');
-  const [tipoContrato, setTipoContrato] = useState('');
-  const [tipoCombustible, setTipoCombustible] = useState('');
-  const [cantidad, setCantidad] = useState('');
-  const [unidadEjecutora, setUnidadEjecutora] = useState('');
-  const [lugarEntrega, setLugarEntrega] = useState('');
-  const [estado, setEstado] = useState('');
-  const [montoTotal, setMontoTotal] = useState('');
-  const [fechaEmision, setFechaEmision] = useState(() => {
-    const today = new Date();
-    return today.toISOString().split('T')[0];
-  });
-  const [fechaLimiteEntrega, setFechaLimiteEntrega] = useState('');
-  const [clienteSeleccionado, setClienteSeleccionado] = useState('');
-  const [numeroContrato, setNumeroContrato] = useState('');
-  const [loading, setLoading] = useState(false);
-
   const { clientes, loading: clientesLoading } = useContext(ClientesContext);
   const { accessToken, user } = useAuth();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  // Campos de cabecera de la orden
+  const [codigoSiga, setCodigoSiga] = useState('');
+  const [numeroOrden, setNumeroOrden] = useState('');
+  const [tipoContrato, setTipoContrato] = useState('');
+  const [numeroContrato, setNumeroContrato] = useState('');
+  const [lugarEntrega, setLugarEntrega] = useState('');
+  const [estado, setEstado] = useState('');
+  const [montoTotal, setMontoTotal] = useState('');
+  const [fechaEmision, setFechaEmision] = useState(() => new Date().toISOString().split('T')[0]);
+  const [fechaLimiteEntrega, setFechaLimiteEntrega] = useState('');
+  const [clienteSeleccionado, setClienteSeleccionado] = useState('');
 
-    // Validar campos obligatorios
+  // Lista dinámica de ítems
+  const [items, setItems] = useState([
+    { tipo_combustible: '', cantidad: '', unidad: 'GLL', precio_unitario: '' },
+  ]);
+
+  const [loading, setLoading] = useState(false);
+
+  const agregarItem = () => {
+    setItems(prev => [
+      ...prev,
+      { tipo_combustible: '', cantidad: '', unidad: 'GLL', precio_unitario: '' },
+    ]);
+  };
+
+  const eliminarItem = index => {
+    setItems(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const actualizarItem = (index, field, value) => {
+    setItems(prev => {
+      const copia = [...prev];
+      copia[index][field] = value;
+      return copia;
+    });
+  };
+
+  const handleSubmit = async e => {
+    e.preventDefault();
+    // Validaciones de cabecera
     if (
       !codigoSiga ||
       !tipoContrato ||
-      !cantidad ||
-      !unidadEjecutora ||
       !lugarEntrega ||
       !estado ||
       !montoTotal ||
       !fechaEmision ||
       !clienteSeleccionado
     ) {
-      alert('Por favor complete todos los campos obligatorios.');
-      return;
+      return alert('Completa todos los campos obligatorios de la orden.');
     }
-
-    if (isNaN(montoTotal) || isNaN(cantidad)) {
-      alert('Cantidad y Monto Total deben ser números válidos.');
-      return;
+    // Validación ítems
+    if (items.length === 0) {
+      return alert('Agrega al menos un ítem.');
     }
-
-    if (!user || !user.id) {
-      alert('Usuario no autenticado.');
-      return;
-    }
-
-    let contratoId = null;
-    let tipoCompra = '';
-
-    if (tipoContrato === 'CONTRATO') {
-      if (!numeroContrato) {
-        alert('Por favor ingrese un número de contrato.');
-        return;
+    for (const it of items) {
+      if (!it.tipo_combustible || !it.cantidad || !it.precio_unitario) {
+        return alert('Completa todos los campos de cada ítem.');
       }
-      contratoId = numeroContrato;
-      tipoCompra = 'Contrato';
-    } else if (tipoContrato === 'DIRECTO') {
-      contratoId = null;
-      tipoCompra = 'Directa';
     }
+    if (!user?.id) {
+      return alert('Usuario no autenticado.');
+    }
+
+    const payload = {
+      codigo_siga: codigoSiga,
+      numero_orden: numeroOrden,
+      tipo_compra: tipoContrato === 'CONTRATO' ? 'Contrato' : 'Directa',
+      id_contrato: tipoContrato === 'CONTRATO' ? numeroContrato : null,
+      lugar_entrega_oc: lugarEntrega,
+      estado_oc: estado,
+      monto_total_oc: parseFloat(montoTotal),
+      fecha_emision_oc: fechaEmision,
+      fecha_limite_entrega: fechaLimiteEntrega || undefined,
+      id_cliente: parseInt(clienteSeleccionado, 10),
+      items: items.map(it => ({
+        tipo_combustible: it.tipo_combustible,
+        cantidad: parseFloat(it.cantidad),
+        unidad_medida: it.unidad,
+        precio_unitario: parseFloat(it.precio_unitario),
+      })),
+    };
 
     setLoading(true);
-
     try {
-      await registrarOrdenCompra(accessToken, {
-        codigo_siga: codigoSiga,
-        numero_orden: numeroOrden,
-        tipo_contrato: tipoContrato,
-        tipo_combustible: tipoCombustible,
-        cantidad: parseFloat(cantidad),
-        unidad_ejecutora: unidadEjecutora,
-        lugar_entrega_oc: lugarEntrega,
-        estado_oc: estado,
-        monto_total_oc: parseFloat(montoTotal),
-        fecha_emision_oc: fechaEmision,
-        fecha_limite_entrega: fechaLimiteEntrega,
-        id_cliente: parseInt(clienteSeleccionado, 10),
-        id_contrato: contratoId,
-        tipo_compra: tipoCompra,
-      });
-
+      await registrarOrdenCompra(accessToken, payload);
       alert('Orden registrada correctamente');
-
-      // Resetear campos
+      // Reset campos
       setCodigoSiga('');
       setNumeroOrden('');
       setTipoContrato('');
-      setTipoCombustible('');
-      setCantidad('');
-      setUnidadEjecutora('');
+      setNumeroContrato('');
       setLugarEntrega('');
       setEstado('');
       setMontoTotal('');
       setFechaEmision(new Date().toISOString().split('T')[0]);
       setFechaLimiteEntrega('');
       setClienteSeleccionado('');
-      setNumeroContrato('');
-    } catch (error) {
+      setItems([{ tipo_combustible: '', cantidad: '', unidad: 'GLL', precio_unitario: '' }]);
+    } catch (err) {
+      console.error(err);
       alert('Error al registrar la orden');
-      console.error(error);
     } finally {
       setLoading(false);
     }
   };
 
   if (clientesLoading) {
-    return <div className="text-center mt-5">Cargando clientes...</div>;
+    return <div className="text-center mt-5">Cargando clientes…</div>;
   }
 
   return (
     <div className="ordenes-container">
       <h2 className="ordenes-title">Registrar Nueva Orden de Compra</h2>
       <form onSubmit={handleSubmit} className="row g-3">
-
         {/* Código SIGA */}
         <div className="col-md-6">
           <div className="form-floating">
@@ -131,10 +134,10 @@ const RegistrarNuevaOrdenCompra = () => {
               className="form-control"
               id="codigoSiga"
               value={codigoSiga}
-              onChange={(e) => setCodigoSiga(e.target.value)}
+              onChange={e => setCodigoSiga(e.target.value)}
               required
             />
-            <label htmlFor="codigoSiga">Código SIAF</label>
+            <label htmlFor="codigoSiga">Código SIGA</label>
           </div>
         </div>
 
@@ -146,7 +149,7 @@ const RegistrarNuevaOrdenCompra = () => {
               className="form-control"
               id="numeroOrden"
               value={numeroOrden}
-              onChange={(e) => setNumeroOrden(e.target.value)}
+              onChange={e => setNumeroOrden(e.target.value)}
             />
             <label htmlFor="numeroOrden">Número de Orden</label>
           </div>
@@ -159,7 +162,7 @@ const RegistrarNuevaOrdenCompra = () => {
               className="form-select"
               id="tipoContrato"
               value={tipoContrato}
-              onChange={(e) => setTipoContrato(e.target.value)}
+              onChange={e => setTipoContrato(e.target.value)}
               required
             >
               <option value="">Selecciona un tipo de contrato</option>
@@ -170,7 +173,7 @@ const RegistrarNuevaOrdenCompra = () => {
           </div>
         </div>
 
-        {/* Número de Contrato condicional */}
+        {/* Número de Contrato (condicional) */}
         {tipoContrato === 'CONTRATO' && (
           <div className="col-md-6">
             <div className="form-floating">
@@ -179,62 +182,13 @@ const RegistrarNuevaOrdenCompra = () => {
                 className="form-control"
                 id="numeroContrato"
                 value={numeroContrato}
-                onChange={(e) => setNumeroContrato(e.target.value)}
+                onChange={e => setNumeroContrato(e.target.value)}
                 required
               />
               <label htmlFor="numeroContrato">Número de Contrato</label>
             </div>
           </div>
         )}
-
-        {/* Tipo de Combustible */}
-        <div className="col-md-6">
-          <div className="form-floating">
-            <select
-              className="form-select"
-              id="tipoCombustible"
-              value={tipoCombustible}
-              onChange={(e) => setTipoCombustible(e.target.value)}
-              required
-            >
-              <option value="">Selecciona</option>
-              <option value="DIESEL B5-S50">DIESEL B5-S50</option>
-              <option value="GASOHOL REGULAR">GASOHOL REGULAR</option>
-              <option value="GASOHOL PREMIUM">GASOHOL PREMIUM</option>
-            </select>
-            <label htmlFor="tipoCombustible">Tipo de Combustible</label>
-          </div>
-        </div>
-
-        {/* Cantidad */}
-        <div className="col-md-6">
-          <div className="form-floating">
-            <input
-              type="number"
-              className="form-control"
-              id="cantidad"
-              value={cantidad}
-              onChange={(e) => setCantidad(e.target.value)}
-              required
-            />
-            <label htmlFor="cantidad">Cantidad</label>
-          </div>
-        </div>
-
-        {/* Unidad Ejecutora */}
-        <div className="col-md-6">
-          <div className="form-floating">
-            <input
-              type="text"
-              className="form-control"
-              id="unidadEjecutora"
-              value={unidadEjecutora}
-              onChange={(e) => setUnidadEjecutora(e.target.value)}
-              required
-            />
-            <label htmlFor="unidadEjecutora">Unidad Ejecutora</label>
-          </div>
-        </div>
 
         {/* Lugar de Entrega */}
         <div className="col-md-6">
@@ -244,21 +198,21 @@ const RegistrarNuevaOrdenCompra = () => {
               className="form-control"
               id="lugarEntrega"
               value={lugarEntrega}
-              onChange={(e) => setLugarEntrega(e.target.value)}
+              onChange={e => setLugarEntrega(e.target.value)}
               required
             />
             <label htmlFor="lugarEntrega">Lugar de Entrega</label>
           </div>
         </div>
 
-        {/* Estado (SELECT) */}
+        {/* Estado */}
         <div className="col-md-6">
           <div className="form-floating">
             <select
               className="form-select"
               id="estado"
               value={estado}
-              onChange={(e) => setEstado(e.target.value)}
+              onChange={e => setEstado(e.target.value)}
               required
             >
               <option value="">Selecciona un estado</option>
@@ -279,7 +233,7 @@ const RegistrarNuevaOrdenCompra = () => {
               className="form-control"
               id="montoTotal"
               value={montoTotal}
-              onChange={(e) => setMontoTotal(e.target.value)}
+              onChange={e => setMontoTotal(e.target.value)}
               required
             />
             <label htmlFor="montoTotal">Monto Total</label>
@@ -294,7 +248,7 @@ const RegistrarNuevaOrdenCompra = () => {
               className="form-control"
               id="fechaEmision"
               value={fechaEmision}
-              onChange={(e) => setFechaEmision(e.target.value)}
+              onChange={e => setFechaEmision(e.target.value)}
               required
             />
             <label htmlFor="fechaEmision">Fecha de Emisión</label>
@@ -309,7 +263,7 @@ const RegistrarNuevaOrdenCompra = () => {
               className="form-control"
               id="fechaLimiteEntrega"
               value={fechaLimiteEntrega}
-              onChange={(e) => setFechaLimiteEntrega(e.target.value)}
+              onChange={e => setFechaLimiteEntrega(e.target.value)}
             />
             <label htmlFor="fechaLimiteEntrega">Fecha Límite Entrega</label>
           </div>
@@ -322,13 +276,13 @@ const RegistrarNuevaOrdenCompra = () => {
               className="form-select"
               id="clienteSeleccionado"
               value={clienteSeleccionado}
-              onChange={(e) => setClienteSeleccionado(e.target.value)}
+              onChange={e => setClienteSeleccionado(e.target.value)}
               required
             >
               <option value="">Selecciona un cliente</option>
-              {clientes.map((cliente) => (
-                <option key={cliente.id_cliente} value={cliente.id_cliente}>
-                  {cliente.nombre_cliente}
+              {clientes.map(c => (
+                <option key={c.id_cliente} value={c.id_cliente}>
+                  {c.nombre_cliente}
                 </option>
               ))}
             </select>
@@ -336,14 +290,78 @@ const RegistrarNuevaOrdenCompra = () => {
           </div>
         </div>
 
-        {/* Botón */}
+        {/* Sección Ítems Dinámicos */}
+        <div className="col-12"><h5>Ítems de la Orden</h5></div>
+        {items.map((item, idx) => (
+          <React.Fragment key={idx}>
+            {/* Tipo de combustible */}
+            <div className="col-md-3">
+              <select
+                className="form-select"
+                value={item.tipo_combustible}
+                onChange={e => actualizarItem(idx, 'tipo_combustible', e.target.value)}
+                required
+              >
+                <option value="">Combustible</option>
+                <option value="DIESEL B5-S50">DIESEL B5-S50</option>
+                <option value="GASOHOL REGULAR">GASOHOL REGULAR</option>
+                <option value="GASOHOL PREMIUM">GASOHOL PREMIUM</option>
+              </select>
+            </div>
+            {/* Cantidad */}
+            <div className="col-md-2">
+              <input
+                type="number"
+                className="form-control"
+                placeholder="Cantidad"
+                value={item.cantidad}
+                onChange={e => actualizarItem(idx, 'cantidad', e.target.value)}
+                required
+              />
+            </div>
+            {/* Unidad (siempre Galón US) */}
+            <div className="col-md-2">
+              <input
+                type="text"
+                className="form-control"
+                value={item.unidad}
+                readOnly
+              />
+            </div>
+            {/* Precio Unitario */}
+            <div className="col-md-3">
+              <input
+                type="number"
+                className="form-control"
+                placeholder="Precio Unitario"
+                value={item.precio_unitario}
+                onChange={e => actualizarItem(idx, 'precio_unitario', e.target.value)}
+                required
+              />
+            </div>
+            {/* Botón Eliminar */}
+            <div className="col-md-2 d-flex align-items-center">
+              <button
+                type="button"
+                className="btn btn-danger w-100"
+                onClick={() => eliminarItem(idx)}
+                disabled={items.length === 1}
+              >
+                Eliminar
+              </button>
+            </div>
+          </React.Fragment>
+        ))}
+
+        <div className="col-12 text-end">
+          <button type="button" className="btn btn-secondary" onClick={agregarItem}>
+            + Agregar Ítem
+          </button>
+        </div>
+
+        {/* Botón Registrar */}
         <div className="col-12">
-          <button
-            type="submit"
-            className="btn btn-dark w-100 py-2"
-            style={{ borderRadius: '12px' }}
-            disabled={loading}
-          >
+          <button type="submit" className="btn btn-dark w-100 py-2" disabled={loading}>
             {loading ? 'Registrando...' : 'Registrar Orden'}
           </button>
         </div>
