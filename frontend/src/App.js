@@ -4,7 +4,6 @@ import { AuthProvider } from './context/AuthContext';
 import { ClientesProvider } from './context/ClientesContext';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
-import RegistroVisitas from './components/RegistroVisitas';
 import RegistrarNuevaVisita from './components/RegistrarNuevaVisita';
 import ListarVisitasPendientes from './components/ListarVisitasPendientes';
 import PrivateRoute from './components/PrivateRoute';
@@ -35,14 +34,6 @@ function AppRoutes() {
           element={
             <PrivateRoute>
               <Dashboard />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/registro-visitas"
-          element={
-            <PrivateRoute>
-              <RegistroVisitas />
             </PrivateRoute>
           }
         />
