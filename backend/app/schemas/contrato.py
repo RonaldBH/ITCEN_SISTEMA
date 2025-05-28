@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional
 from datetime import date
-
+from app.schemas.cliente import ClienteOut
 # Base
 class ContratoBase(BaseModel):
     fecha_firma: date
@@ -30,6 +30,7 @@ class ContratoOut(BaseModel):
     monto_total_contrato: Optional[float] = None
     id_cliente: Optional[int] = None
     id_subasta: Optional[int] = None
+    cliente: Optional[ClienteOut] = None
 
     class Config:
         orm_mode = True

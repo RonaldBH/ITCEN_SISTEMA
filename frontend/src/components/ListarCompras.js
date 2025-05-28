@@ -1,4 +1,3 @@
-// ListarCompras.jsx
 import React, { useState, useEffect } from 'react';
 import { obtenerCompras } from '../services/compraServices';
 import { useAuth } from '../context/AuthContext';
@@ -85,6 +84,7 @@ const ListarCompras = () => {
               <th>Cantidad</th>
               <th>Precio Unitario</th>
               <th>Stock Restante</th>
+              <th>Tipo de Combustible</th>
             </tr>
           </thead>
           <tbody>
@@ -97,6 +97,7 @@ const ListarCompras = () => {
                 <td>{compra.cantidad}</td>
                 <td>{compra.precio_unitario}</td>
                 <td>{compra.stock_restante}</td>
+                <td>{compra.tipo_combustible || '-'}</td>
               </tr>
             ))}
           </tbody>

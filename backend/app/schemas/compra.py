@@ -2,6 +2,7 @@ from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime
 from app.schemas.proveedor import ProveedorOut
+from sqlalchemy import Column, Integer, String, Identity
 
 # Base
 class CompraBase(BaseModel):
@@ -10,6 +11,7 @@ class CompraBase(BaseModel):
     cantidad: float
     precio_unitario: float
     stock_restante: float
+    tipo_combustible:String
 
 # Crear
 class CompraCreate(CompraBase):
@@ -30,6 +32,7 @@ class CompraOut(BaseModel):
     precio_unitario: Optional[float] = None
     stock_restante: Optional[float] = None
     fecha_compra: Optional[datetime] = None
+    tipo_combustible:Optional[String] = None
     proveedor: Optional[ProveedorOut] = None
 
     class Config:

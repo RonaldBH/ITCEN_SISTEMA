@@ -22,6 +22,10 @@ class ClienteUpdate(BaseModel):
 # Respuesta
 class ClienteOut(ClienteBase):
     id_cliente: int
+    nombre_cliente: Optional[str] = None
+    direccion_cliente: Optional[str] = None
+    ruc_cliente: Optional[str] = None
+    telefono_cliente: Optional[str] = None
 
     class Config:
         orm_mode = True

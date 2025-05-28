@@ -323,7 +323,7 @@ const openAsociar = sub => {
                         <td>{new Date(c.fecha_firma).toLocaleDateString()}</td>
                         <td>{c.estado_contrato}</td>
                         <td>S/ {c.monto_total_contrato.toFixed(2)}</td>
-                        <td>{c.id_cliente}</td>
+                        <td>{c.cliente?.nombre_cliente || '-'}</td>
                       </tr>
                     ))}
                   </tbody>

@@ -10,6 +10,7 @@ const RegistrarCompra = () => {
   const [fechaCompra, setFechaCompra] = useState('');
   const [cantidad, setCantidad] = useState('');
   const [precioUnitario, setPrecioUnitario] = useState('');
+  const [tipoCombustible, setTipoCombustible] = useState('');
 
   useEffect(() => {
     const fetchProveedores = async () => {
@@ -32,7 +33,8 @@ const RegistrarCompra = () => {
         fecha_compra: fechaCompra,
         cantidad: parsedCantidad,
         precio_unitario: parseFloat(precioUnitario),
-        stock_restante: parsedCantidad, // Automáticamente igual a cantidad
+        stock_restante: parsedCantidad,
+        tipo_combustible: tipoCombustible,
       };
       await registrarCompra(accessToken, datos);
       alert('Compra registrada exitosamente');
@@ -40,6 +42,7 @@ const RegistrarCompra = () => {
       setFechaCompra('');
       setCantidad('');
       setPrecioUnitario('');
+      setTipoCombustible('');
     } catch (error) {
       console.error('Error al registrar la compra:', error);
       alert('Error al registrar la compra');
@@ -95,7 +98,7 @@ const RegistrarCompra = () => {
             <label htmlFor="cantidad">Cantidad</label>
           </div>
 
-          <div className="form-floating mb-4">
+          <div className="form-floating mb-3">
             <input
               type="number"
               className="form-control"
@@ -106,6 +109,22 @@ const RegistrarCompra = () => {
               placeholder="Precio Unitario"
             />
             <label htmlFor="precioUnitario">Precio Unitario</label>
+          </div>
+
+          <div className="form-floating mb-4">
+            <select
+              className="form-select"
+              id="tipoCombustible"
+              value={tipoCombustible}
+              onChange={(e) => setTipoCombustible(e.target.value)}
+              required
+            >
+              <option value="">Seleccione tipo de combustible</option>
+              <option value="GASOHOL REGULAR">GASOHOL REGULAR</option>
+              <option value="DIESEL B5 S50">DIESEL B5 S50</option>
+              <option value="GASOHOL PREMIUM">GASOHOL PREMIUM</option>
+            </select>
+            <label htmlFor="tipoCombustible">Tipo de combustible</label>
           </div>
 
           <button type="submit" className="btn btn-dark w-100 py-2" style={{ borderRadius: '12px' }}>
