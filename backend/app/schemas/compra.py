@@ -11,7 +11,7 @@ class CompraBase(BaseModel):
     cantidad: float
     precio_unitario: float
     stock_restante: float
-    tipo_combustible:String
+    tipo_combustible:str
 
 # Crear
 class CompraCreate(CompraBase):
@@ -32,7 +32,7 @@ class CompraOut(BaseModel):
     precio_unitario: Optional[float] = None
     stock_restante: Optional[float] = None
     fecha_compra: Optional[datetime] = None
-    tipo_combustible:Optional[String] = None
+    tipo_combustible:Optional[str] = None
     proveedor: Optional[ProveedorOut] = None
 
     class Config:
