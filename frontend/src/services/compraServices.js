@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'https://itcen-sistema.onrender.com/v1/compras/';
+const API_URL = 'https://itcen-sistema.onrender.com/api/v1/compras/';
 
 export const obtenerCompras = async (token, filtros = {}) => {
   const response = await axios.get(API_URL, {
